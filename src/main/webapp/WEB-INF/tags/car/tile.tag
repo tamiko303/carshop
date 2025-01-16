@@ -4,7 +4,7 @@
 <tr>
     <td>
         <a href="${pdpLink}">
-            <img src="<c:url value=""/>" width="100" height="100" alt="Car image">
+            <img src="<c:url value="https://raw.githubusercontent.com/Alex-Job/img/refs/heads/main/car.png"/>" width="100" height="100" alt="Car image">
         </a>
     </td>
     <td><c:out value="${car.brand}"/></td>

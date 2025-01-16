@@ -29,9 +29,6 @@
                         <div class="row justify-content-center">
                             <button type="submit" class="btn btn-primary">Login</button>
                         </div>
-                        <div class="row justify-content-center">
-                            Login via GitHub >>
-                        </div>
                     </form>
                 </div>
             </div>
