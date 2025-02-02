@@ -4,9 +4,6 @@
 <%@ taglib prefix="car" tagdir="/WEB-INF/tags/car" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <common:page pageTitle="Car list" showMenu="true">
-    <div class="row justify-content-center font-italic mb-3">
-        Found <c:out value="${cars.totalElements}"/> results!
-    </div>
     <table class="table table-striped">
         <thead>
         <tr>

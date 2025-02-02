@@ -17,13 +17,29 @@ public class Car {
     @NotNull
     private String model;
 
-    private String image;
-
     @Lob
     private String description;
 
     @NotNull
     private BigDecimal price;
+
+    @NotNull
+    private int productionYear;
+
+    @NotNull
+    private int mileage;
+
+    @NotNull
+    private String bodyType;
+
+    @NotNull
+    private String engineType;
+
+    @NotNull
+    private String engineCapacity;
+
+    @NotNull
+    private String gearboxType;
 
     public Long getId() {
         return id;
@@ -49,14 +65,6 @@ public class Car {
         this.model = model;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -71,5 +79,53 @@ public class Car {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public int getProductionYear() {
+        return productionYear;
+    }
+
+    public void setProductionYear(int productionYear) {
+        this.productionYear = productionYear;
+    }
+
+    public int getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(int mileage) {
+        this.mileage = mileage;
+    }
+
+    public String getBodyType() {
+        return bodyType;
+    }
+
+    public void setBodyType(String bodyType) {
+        this.bodyType = bodyType;
+    }
+
+    public String getEngineType() {
+        return engineType;
+    }
+
+    public void setEngineType(String engineType) {
+        this.engineType = engineType;
+    }
+
+    public String getEngineCapacity() {
+        return engineCapacity;
+    }
+
+    public void setEngineCapacity(String engineCapacity) {
+        this.engineCapacity = engineCapacity;
+    }
+
+    public String getGearboxType() {
+        return gearboxType;
+    }
+
+    public void setGearboxType(String gearboxType) {
+        this.gearboxType = gearboxType;
     }
 }
