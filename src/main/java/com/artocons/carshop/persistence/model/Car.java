@@ -5,39 +5,51 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "car")
 public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "brand")
     @NotNull
     private String brand;
 
+    @Column(name = "model")
     @NotNull
     private String model;
 
+    @Column(name = "description")
     @Lob
+    @NotNull
     private String description;
 
+    @Column(name = "price")
     @NotNull
     private BigDecimal price;
 
+    @Column(name = "production_year")
     @NotNull
-    private int productionYear;
+    private Long productionYear;
 
+    @Column(name = "mileage")
     @NotNull
-    private int mileage;
+    private Long mileage;
 
+    @Column(name = "body_type")
     @NotNull
     private String bodyType;
 
+    @Column(name = "engine_type")
     @NotNull
     private String engineType;
 
+    @Column(name = "engine_capacity")
     @NotNull
     private String engineCapacity;
 
+    @Column(name = "gearbox_type")
     @NotNull
     private String gearboxType;
 
@@ -81,19 +93,19 @@ public class Car {
         this.price = price;
     }
 
-    public int getProductionYear() {
+    public Long getProductionYear() {
         return productionYear;
     }
 
-    public void setProductionYear(int productionYear) {
+    public void setProductionYear(Long productionYear) {
         this.productionYear = productionYear;
     }
 
-    public int getMileage() {
+    public Long getMileage() {
         return mileage;
     }
 
-    public void setMileage(int mileage) {
+    public void setMileage(Long mileage) {
         this.mileage = mileage;
     }
 

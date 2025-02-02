@@ -21,3 +21,27 @@ INSERT INTO car (brand, model, production_year, mileage, body_type, engine_type,
 INSERT INTO car (brand, model, production_year, mileage, body_type, engine_type, engine_capacity, gearbox_type, price, description) VALUES ('Aston Martin', 'DBS', 2012, 61450, 'SUV', 'Gasoline', 445, 'Auto', 10000.0, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum');
 INSERT INTO car (brand, model, production_year, mileage, body_type, engine_type, engine_capacity, gearbox_type, price, description) VALUES ('Aston Martin', 'Valkyrie', 2010, 224333, 'Hatchback', 'Gasoline', 151, 'Auto', 40000.0, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum');
 INSERT INTO car (brand, model, production_year, mileage, body_type, engine_type, engine_capacity, gearbox_type, price, description) VALUES ('Aston Martin', 'Valour', 2009, 75000, 'Сoupe', 'Diesel', 170, 'Manual', 8000.0, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum');
+
+insert into stock (product_id, stock, reserved) values (1, 11, 6);
+insert into stock (product_id, stock, reserved) values (2, 12, 7);
+insert into stock (product_id, stock, reserved) values (3, 13, 8);
+insert into stock (product_id, stock, reserved) values (4, 14, 9);
+insert into stock (product_id, stock, reserved) values (5, 15, 10);
+insert into stock (product_id, stock, reserved) values (6, 16, 0);
+insert into stock (product_id, stock, reserved) values (7, 17, 1);
+insert into stock (product_id, stock, reserved) values (8, 18, 2);
+insert into stock (product_id, stock, reserved) values (9, 19, 3);
+insert into stock (product_id, stock, reserved) values (10, 20, 4);
+insert into stock (product_id, stock, reserved) values (11, 21, 5);
+insert into stock (product_id, stock, reserved) values (12, 22, 6);
+insert into stock (product_id, stock, reserved) values (13, 23, 7);
+insert into stock (product_id, stock, reserved) values (14, 24, 8);
+insert into stock (product_id, stock, reserved) values (15, 25, 9);
+insert into stock (product_id, stock, reserved) values (16, 26, 10);
+insert into stock (product_id, stock, reserved) values (17, 27, 0);
+insert into stock (product_id, stock, reserved) values (18, 28, 1);
+insert into stock (product_id, stock, reserved) values (19, 29, 2);
+insert into stock (product_id, stock, reserved) values (20, 1, 1);
+insert into stock (product_id, stock, reserved) values (21, 2, 2);
+insert into stock (product_id, stock, reserved) values (22, 3, 3);
+insert into stock (product_id, stock, reserved) values (23, 3, 3);
