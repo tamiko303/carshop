@@ -45,3 +45,17 @@ insert into stock (product_id, stock, reserved) values (20, 1, 1);
 insert into stock (product_id, stock, reserved) values (21, 2, 2);
 insert into stock (product_id, stock, reserved) values (22, 3, 3);
 insert into stock (product_id, stock, reserved) values (23, 3, 3);
+
+insert into colors (color_id, name) values (1, 'Sea crystal blue');
+insert into colors (color_id, name) values (1, 'Pearl black');
+insert into colors (color_id, name) values (1, 'Smoky pearl');
+insert into colors (color_id, name) values (1, 'Liquid caramel');
+insert into colors (color_id, name) values (1, 'Blue');
+insert into colors (color_id, name) values (1, 'Mars red');
+insert into colors (color_id, name) values (1, 'Ivory white');
+insert into colors (color_id, name) values (1, 'Dark gray');
+insert into colors (color_id, name) values (1, 'Diamond purple');
+insert into colors (color_id, name) values (1, 'Elephant grey');
+insert into colors (color_id, name) values (1, 'Olive grey');
+insert into colors (color_id, name) values (1, 'Orange');
+
