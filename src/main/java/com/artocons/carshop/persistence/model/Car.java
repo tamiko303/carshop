@@ -3,6 +3,8 @@ package com.artocons.carshop.persistence.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "car")
@@ -52,6 +54,14 @@ public class Car {
     @Column(name = "gearbox_type")
     @NotNull
     private String gearboxType;
+
+    @ManyToMany
+    @JoinTable(
+            name = "car_colors",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "color_id")
+    )
+    private Set<Color> colors = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -140,4 +150,8 @@ public class Car {
     public void setGearboxType(String gearboxType) {
         this.gearboxType = gearboxType;
     }
+
+    public Set<Color> getColors() { return colors; }
+
+    public void setColors(Set<Color> colors) { this.colors = colors; }
 }
