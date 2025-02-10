@@ -11,7 +11,7 @@ public class Color {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long color_id;
 
     private String name;
 
@@ -20,11 +20,11 @@ public class Color {
 
     public Color() {}
 
-    public Long getId() { return id; }
+    public Long getId() { return color_id; }
 
     public Color(String name) { this.name = name; }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) { this.color_id = id; }
 
     public String getName() { return name; }
 

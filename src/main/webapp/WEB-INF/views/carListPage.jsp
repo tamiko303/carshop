@@ -10,6 +10,7 @@
             <th scope="col">Image</th>
             <th scope="col">Brand <util:sorting/></th>
             <th scope="col">Model <util:sorting/></th>
+            <th scope="col">Color <util:sorting/></th>
             <th scope="col">Price <util:sorting/></th>
         </tr>
         </thead>
@@ -19,4 +20,5 @@
         </c:forEach>
         </tbody>
     </table>
+    <common:pagination currentPage="${currentPage}" totalPages="${totalPages}"/>
 </common:page>
