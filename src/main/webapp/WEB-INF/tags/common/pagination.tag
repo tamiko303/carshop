@@ -1,40 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="currentPage" required="true" type="java.lang.Integer" %>
 <%@ attribute name="totalPages" required="true" type="java.lang.Integer" %>
-<%--<div th:if="${totalPages > 1}">--%>
-<%--    <div class="row col-sm-10">--%>
-<%--&lt;%&ndash;        <div class="col-sm-2">&ndash;%&gt;--%>
-<%--&lt;%&ndash;            Total Rows: [[${totalItems}]]&ndash;%&gt;--%>
-<%--&lt;%&ndash;        </div>&ndash;%&gt;--%>
-<%--        <div class="col-sm-1">--%>
-<%--            <span c:each="i: ${numbers.sequence(1, totalPages)}">--%>
-<%--              <a c:if="${currentPage != i}" c:href="@{'/page/' + ${i}}">[[${i}]]</a>--%>
-<%--              <span c:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;--%>
-<%--            </span>--%>
-<%--        </div>--%>
-<%--        <div class="col-sm-1">--%>
-<%--            <a c:if="${currentPage < totalPages}" c:href="@{'/page/' + ${currentPage + 1}}">Next</a>--%>
-<%--            <span c:unless="${currentPage < totalPages}">Next</span>--%>
-<%--        </div>--%>
+<%@ attribute name="sortField" required="false" type="java.lang.String" %>
+<%@ attribute name="sortDir" required="false" type="java.lang.String" %>
 
-<%--        <div class="col-sm-1">--%>
-<%--            <a c:if="${currentPage < totalPages}" c:href="@{'/page/' + ${totalPages}}">Last</a>--%>
-<%--            <span c:unless="${currentPage < totalPages}">Last</span>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--</div>--%>
+<c:url var="url" value="/cars/page"/>
 
-
-
-
-
-
-<div class="d-flex flex-row align-items-center">
+<div class="row col-sm-10">
     <c:if test="${currentPage != 1}">
-        <td><a href="@{'/page/' + ${currentPage - 1}}">Previous</a></td>
+        <td><a href="${url}/${currentPage - 1}?sortField${sortField}&sortDir=${sortDir}">Previous</a></td>
     </c:if>
 
-    <table border="1" cellpadding="5" cellspacing="5">
+    <table>
         <tr>
             <c:forEach begin="1" end="${totalPages}" var="i">
                 <c:choose>
@@ -42,14 +19,15 @@
                         <td>${i}</td>
                     </c:when>
                     <c:otherwise>
-                        <td><a href="cars/page/${i}">${i}</a></td>
+                        <td><a href="${url}/${i}?sortField=${sortField}&sortDir=${sortDir}">${i}</a></td>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
         </tr>
     </table>
+
     <c:if test="${currentPage lt totalPages}">
-        <td><a href="@{'/page/' + ${currentPage + 1}}">Next</a></td>
+        <td><a href="${url}/${currentPage + 1}}?sortField${sortField}&sortDir=${sortDir}">Next</a></td>
     </c:if>
 </div>
 
