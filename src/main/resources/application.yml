@@ -3,8 +3,11 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
-    pagination:
-      cars-per-page: 5
+  pagination:
+    cars-per-page: 5
+  sort:
+    car-defauit-field: price
+    car-defauit-direction: asc
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

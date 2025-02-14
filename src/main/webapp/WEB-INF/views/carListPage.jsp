@@ -8,10 +8,10 @@
         <thead>
         <tr>
             <th scope="col">Image</th>
-            <th scope="col">Brand <util:sorting page="${currentPage}" field="Brand"/></th>
+            <th scope="col">Brand <util:sorting page="${currentPage}" field="brand"/></th>
             <th scope="col">Model <util:sorting page="${currentPage}" field="model"/></th>
             <th scope="col">Color </th>
-            <th scope="col">Price <util:sorting page="${currentPage}" field="Price"/></th>
+            <th scope="col">Price <util:sorting page="${currentPage}" field="price"/></th>
         </tr>
         </thead>
         <tbody>

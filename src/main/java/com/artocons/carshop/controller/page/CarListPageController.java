@@ -25,8 +25,15 @@ public class CarListPageController {
     private static final String CAR_LIST_PAGE = "carListPage";
     private static final String CARS = "cars";
 
-    @Value("${spring.mvc.pagination.cars-per-page}")
-    private int carsPerPage;
+    @Value("${spring.pagination.cars-per-page}")
+    private Integer carsPerPage;
+
+    @Value("${spring.sort.car-defauit-field}")
+    private String sortFieldDefault;
+
+    @Value("${spring.sort.car-defauit-direction}")
+    private String sortDirDefault;
+
     @Resource
     private CarService carService;
 
@@ -35,7 +42,7 @@ public class CarListPageController {
 //        model.addAttribute(CARS, carService.getCarsPage(Pageable.unpaged()));
 //        return CAR_LIST_PAGE;
 
-        return findPaginated(1, "price", "asc", model);
+        return findPaginated(1, sortFieldDefault, sortDirDefault, model);
     }
 
     @GetMapping("/page/{pageNo}")
