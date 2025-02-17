@@ -5,6 +5,10 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
 
 @Entity
 @Table(name = "car")
@@ -55,21 +59,18 @@ public class Car {
     @NotNull
     private String gearboxType;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "car_colors",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "color_id")
+            joinColumns = @JoinColumn(name = "car_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "color_id", referencedColumnName = "id")
     )
     private Set<Color> colors = new HashSet<>();
+//    private String colorList = convertColorsToString(colors);
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
     public String getBrand() {
         return brand;
@@ -154,4 +155,10 @@ public class Car {
     public Set<Color> getColors() { return colors; }
 
     public void setColors(Set<Color> colors) { this.colors = colors; }
+
+//    public String convertColorsToString(Set<Color> colors) {
+//        return colors.stream()
+//                     .map(color -> color.getColorName())
+//                     .collect(Collectors.joining(" "));
+//    }
 }
