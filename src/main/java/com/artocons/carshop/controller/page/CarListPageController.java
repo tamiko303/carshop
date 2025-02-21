@@ -3,18 +3,15 @@ package com.artocons.carshop.controller.page;
 import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.service.CarService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
 
@@ -24,15 +21,19 @@ public class CarListPageController {
 
     private static final String CAR_LIST_PAGE = "carListPage";
     private static final String CARS = "cars";
+    private static final String SORT_FIED_DEFAULT = "price";
+    private static final String SORT_DIR_DEFAULT = "asc";
+    private static final int PAGE_START = 1;
+    private Page<Car> page;
 
     @Value("${spring.pagination.cars-per-page}")
     private Integer carsPerPage;
 
-    @Value("${spring.sort.car-defauit-field}")
-    private String sortFieldDefault;
-
-    @Value("${spring.sort.car-defauit-direction}")
-    private String sortDirDefault;
+//    @Value("${spring.sort.car-defauit-field}")
+//    private String sortFieldDefault;
+//
+//    @Value("${spring.sort.car-defauit-direction}")
+//    private String sortDirDefault;
 
     @Resource
     private CarService carService;
@@ -42,22 +43,47 @@ public class CarListPageController {
 //        model.addAttribute(CARS, carService.getCarsPage(Pageable.unpaged()));
 //        return CAR_LIST_PAGE;
 
-        return findPaginated(1, sortFieldDefault, sortDirDefault, model);
+        return findPaginatedList(1, SORT_FIED_DEFAULT, SORT_DIR_DEFAULT, "", model);
     }
 
     @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
-                                @RequestParam("sortField") String sortField,
-                                @RequestParam("sortDir") String sortDirection,
-                                Model model) {
+    private String findPaginatedList(@PathVariable(value = "pageNo") int pageNo,
+                                     @RequestParam(defaultValue = SORT_FIED_DEFAULT) String sortField,
+                                     @RequestParam(defaultValue = SORT_DIR_DEFAULT) String sortDirection,
+                                     @RequestParam("query") String query,
+                                     Model model) {
 
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
-        Pageable pageable = PageRequest.of(pageNo - 1, carsPerPage, sort);
-        Page<Car> page = carService.getCarsPage(pageable);
+//        Page<Car> searchRes = carService.searchCars(query, pageable);
+
+        if (query.isEmpty()) {
+
+            Pageable pageRequest = PageRequest.of(pageNo - 1, carsPerPage, sort);
+            page = carService.getCarsPage(pageRequest);
+
+        } else {
+
+            List<Car> fiteredPage = carService.getCarsPage(Pageable.unpaged()).getContent()
+                    .stream()
+                    .filter(i -> i.getBrand().toLowerCase().contains(query.toLowerCase())
+                              || i.getModel().toLowerCase().contains(query.toLowerCase()) )
+                    .collect(Collectors.toList());
+
+            Pageable pageRequest = PageRequest.of(PAGE_START - 1, carsPerPage, sort);
+
+            int start = (int) pageRequest.getOffset();
+            int end = Math.min((start + pageRequest.getPageSize()), fiteredPage.size());
+
+            List<Car> pageContent = fiteredPage.subList(start, end);
+
+            page = new PageImpl<Car>(pageContent, pageRequest, fiteredPage.size());
+        }
 
         model.addAttribute(CARS, page);
+
+        model.addAttribute("query", query);
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());

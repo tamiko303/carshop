@@ -17,4 +17,10 @@ public class CarService {
     public Page<Car> getCarsPage(Pageable pageable) {
         return carRepository.findAll(pageable);
     }
+
+    public Page<Car> searchCars(String query, Pageable pageable) {
+        return carRepository.searchByBrandOrModel(query, pageable);
+    }
+
+
 }

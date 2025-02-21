@@ -21,9 +21,9 @@ create table stock (
 );
 
 create table color (
-    color_id bigint not null,
+    id bigint not null,
     name varchar(255) not null,
-    primary key (color_id)
+    primary key (id)
 );
 
 create table car_colors (
