@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
 
 @Entity
-@Indexed
 @Table(name = "car")
 public class Car {
 
@@ -23,12 +22,10 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @FullTextField
     @Column(name = "brand")
     @NotNull
     private String brand;
 
-    @FullTextField
     @Column(name = "model")
     @NotNull
     private String model;
