@@ -1,6 +1,5 @@
 package com.artocons.carshop.service;
 
-import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.Stock;
 import com.artocons.carshop.persistence.repository.StockRepository;
 import org.springframework.data.domain.Page;
@@ -15,10 +14,17 @@ import java.util.stream.Collectors;
 public class StockService {
 
     @Resource
-    private StockRepository stockRepositoryRepository;
+    public StockRepository stockRepository;
 
-    public Page<Stock> getAllCarsAvailable(Pageable pageable) {
+    public Page<Stock> getAllStocks(Pageable pageable) {
+        return stockRepository.findAll(pageable);
+    }
 
-        return StockRepository.findAll(pageable);
+    public List<Stock> getAllAvailableCarsId() {
+
+        return stockRepository.findAll(Pageable.unpaged()).getContent()
+                .stream()
+                .filter(i -> i.getStock() > i.getReserved() )
+                .collect(Collectors.toList());
     }
 }
