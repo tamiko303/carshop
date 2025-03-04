@@ -12,6 +12,8 @@
             <th scope="col">Model <util:sorting page="${currentPage}" query="${query}" field="model"/></th>
             <th scope="col">Color </th>
             <th scope="col">Price <util:sorting page="${currentPage}" field="price"/></th>
+            <th scope="col">Quantity </th>
+            <th scope="col">Action </th>
         </tr>
         </thead>
         <tbody>

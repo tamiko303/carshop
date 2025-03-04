@@ -11,4 +11,10 @@
     <td><a href="${pdpLink}"><c:out value="${car.model}"/></a></td>
     <td><c:out value="${car.colors}"/></td>
     <td><c:out value="$ ${car.price}"/></td>
+    <td></td>
+    <td>
+        <form action="@{/add}" method="post">
+            <button type="submit" class="btn btn-danger btn-sm">Add to Cart</button>
+        </form>
+    </td>
 </tr>

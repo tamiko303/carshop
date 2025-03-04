@@ -1,8 +1,10 @@
 package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.persistence.model.Car;
+import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.Stock;
 import com.artocons.carshop.service.CarService;
+import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.StockService;
 import com.artocons.carshop.util.CarShopHelper;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
 
@@ -22,6 +26,7 @@ import static com.artocons.carshop.util.CarShopConstants.*;
 public class CarListPageController {
 
     private static final String CAR_LIST_PAGE = "carListPage";
+    private static final String CART_LIST_PAGE = "cartListPage";
     private static final String CARS = "cars";
     private static final String SORT_FIED_DEFAULT = "price";
     private static final String SORT_DIR_DEFAULT = "asc";
@@ -34,6 +39,8 @@ public class CarListPageController {
     private CarService carService;
     @Resource
     private StockService stockService;
+    @Resource
+    private CartService cartService;
 
     @GetMapping
     public String getCarsList(Model model) {
@@ -80,5 +87,15 @@ public class CarListPageController {
         model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
 
         return CAR_LIST_PAGE;
+    }
+
+    @PostMapping("/add")
+    public String addCarToCart(@RequestParam("userId") Long userId,
+                               @RequestParam("productId") Long productId,
+                               @RequestParam("quantity") int quantity,
+                               HttpSession session) {
+
+        cartService.addItemToCart(userId, productId, quantity, Optional.of(""));
+        return "redirect:/";
     }
 }
