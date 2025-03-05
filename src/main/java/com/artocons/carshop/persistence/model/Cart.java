@@ -3,6 +3,7 @@ package com.artocons.carshop.persistence.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Optional;
 
 @Entity
 @Table(name = "cart")
@@ -16,8 +17,8 @@ public class Cart {
     @NotNull
     private Long product_id;
 
-    @Column(name = "user")
-    private Long user_id;
+//    @Column(name = "user")
+//    private Long user_id;
 
     @Column(name = "quantity")
     @NotNull
@@ -32,12 +33,24 @@ public class Cart {
 //    @NotNull
     private String description;
 
+    public <Cart> Cart(Long productId, int quantity, Optional<String> description) {
+//        this.user_id = userId;
+        this.product_id = productId;
+        this.quantity = quantity;
+        this.date = new Date();
+        this.description = description.orElse("");
+    }
+
+    public Cart() {
+
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getProductId() { return product_id; }
     public void setProductId(Long product_id) { this.product_id = product_id; }
-    public Long getUserId() { return user_id; }
-    public void setUserId(Long user_id) { this.user_id = user_id; }
+//    public Long getUserId() { return user_id; }
+//    public void setUserId(Long user_id) { this.user_id = user_id; }
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public Date getDate() { return date; }

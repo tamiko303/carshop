@@ -3,10 +3,12 @@ package com.artocons.carshop.service;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.repository.CartRepository;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Optional;
 
@@ -16,12 +18,15 @@ public class CartService {
     @Resource
     public CartRepository cartRepository;
 
-    public void addItemToCart(long userId, long productId, int quantity, Optional<String> description) throws ServiceException {
+    @Autowired
+    private HttpSession session;
+
+    public void addItemToCart(Cart cartItem) throws ServiceException {
         try {
 
             Cart cartQuery = new Cart();
-            cartQuery.setUserId(userId);
-            cartQuery.setProductId(productId);
+//            cartQuery.setUserId(userId);
+            cartQuery.setProductId(cartItem.getProductId());
 
             Example<Cart> example = Example.of(cartQuery);
 
@@ -30,23 +35,9 @@ public class CartService {
                 return;
             }
 
-            String descr = description.orElse("");
-            Cart cartItem = buildCart(productId, userId, quantity, descr);
             cartRepository.save(cartItem);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
-    }
-
-    private Cart buildCart(long userId, long productId, int quantity, String description) {
-        Cart cartItem = new Cart();
-
-        cartItem.setUserId(userId);
-        cartItem.setProductId(productId);
-        cartItem.setQuantity(quantity);
-        cartItem.setDate(new Date());
-        cartItem.setDescription(description);
-
-        return cartItem;
     }
 }

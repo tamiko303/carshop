@@ -26,11 +26,12 @@ import static com.artocons.carshop.util.CarShopConstants.*;
 public class CarListPageController {
 
     private static final String CAR_LIST_PAGE = "carListPage";
-    private static final String CART_LIST_PAGE = "cartListPage";
+    private static final String CART_PAGE = "cartPage";
     private static final String CARS = "cars";
     private static final String SORT_FIED_DEFAULT = "price";
     private static final String SORT_DIR_DEFAULT = "asc";
     private static final int PAGE_START = 1;
+    private static final String QUANTITY_DEFAULT = "1";
 
     @Value("${spring.pagination.cars-per-page}")
     private Integer carsPerPage;
@@ -41,6 +42,7 @@ public class CarListPageController {
     private StockService stockService;
     @Resource
     private CartService cartService;
+    private int quantity;
 
     @GetMapping
     public String getCarsList(Model model) {
@@ -89,13 +91,29 @@ public class CarListPageController {
         return CAR_LIST_PAGE;
     }
 
-    @PostMapping("/add")
-    public String addCarToCart(@RequestParam("userId") Long userId,
-                               @RequestParam("productId") Long productId,
-                               @RequestParam("quantity") int quantity,
+    @PostMapping("/addToCart")
+    public String addCarToCart(@RequestParam("productId") Long productId,
+                               @RequestParam(defaultValue = QUANTITY_DEFAULT) String quant,
                                HttpSession session) {
+        try {
+            this.quantity = Integer.parseInt(quant.trim());
+        } catch (NumberFormatException nfe)
+        {
+            nfe.printStackTrace();
+            return "redirect:/";
+        }
+        Cart cart = new Cart(productId, quantity, Optional.of(""));
+        session.setAttribute("cart", cart);
 
-        cartService.addItemToCart(userId, productId, quantity, Optional.of(""));
+        cartService.addItemToCart(cart);
+
         return "redirect:/";
+    }
+
+    @GetMapping("/cart")
+    public String viewCart(HttpSession session, Model model) {
+        Cart cart = (Cart) session.getAttribute("cart");
+        model.addAttribute("cart", cart);
+        return CART_PAGE;
     }
 }
