@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,5 +27,20 @@ public class StockService {
                 .stream()
                 .filter(i -> i.getStock() > i.getReserved() )
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void reserveStock(Long stockId, int amountToReserve) {
+        Stock stock = stockRepository.findById(stockId)
+                .orElseThrow(() -> new IllegalArgumentException("Stock not found"));
+
+        if (stock.getStock() < amountToReserve) {
+            throw new IllegalArgumentException("Not enough available stock to reserve");
+        }
+
+        stock.setReserved(stock.getReserved() + amountToReserve);
+        stock.setStock(stock.getStock() - amountToReserve);
+
+        stockRepository.save(stock);
     }
 }
