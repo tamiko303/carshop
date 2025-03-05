@@ -9,5 +9,6 @@
     </td>
     <td><c:out value="${car.brand}"/></td>
     <td><a href="${pdpLink}"><c:out value="${car.model}"/></a></td>
+    <td><c:out value="${car.colors}"/></td>
     <td><c:out value="$ ${car.price}"/></td>
 </tr>

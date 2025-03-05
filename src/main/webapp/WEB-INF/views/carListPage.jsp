@@ -8,9 +8,10 @@
         <thead>
         <tr>
             <th scope="col">Image</th>
-            <th scope="col">Brand <util:sorting/></th>
-            <th scope="col">Model <util:sorting/></th>
-            <th scope="col">Price <util:sorting/></th>
+            <th scope="col">Brand <util:sorting page="${currentPage}" query="${query}" field="brand"/></th>
+            <th scope="col">Model <util:sorting page="${currentPage}" query="${query}" field="model"/></th>
+            <th scope="col">Color </th>
+            <th scope="col">Price <util:sorting page="${currentPage}" field="price"/></th>
         </tr>
         </thead>
         <tbody>
@@ -19,4 +20,5 @@
         </c:forEach>
         </tbody>
     </table>
+    <common:pagination currentPage="${currentPage}" totalPages="${totalPages}" sortField="${sortField}" sortDir="${sortDir}"/>
 </common:page>

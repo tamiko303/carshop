@@ -22,7 +22,7 @@
         </div>
     </header>
     <c:if test="${showMenu}">
-        <common:menu/>
+        <common:menu currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
     </c:if>
     <jsp:doBody/>
 </div>
