@@ -8,6 +8,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -47,11 +48,19 @@ public class CartService {
 
     public int getCartCount() {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+
+        if (CollectionUtils.isEmpty(cart)){
+            return 0;
+        }
         return cart.size();
     }
 
     public BigDecimal getCartTotalCost() {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+
+        if (CollectionUtils.isEmpty(cart)){
+            return BigDecimal.valueOf(0);
+        };
 
         Set<Long> productIds = new HashSet<>();
 

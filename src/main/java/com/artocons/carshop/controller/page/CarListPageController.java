@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
 
@@ -31,8 +30,7 @@ public class CarListPageController {
     private static final String SORT_DIR_DEFAULT = "asc";
     private static final int PAGE_START = 1;
 
-
-    @Value("${spring.pagination.cars-per-page}")
+    @Value("5")
     private Integer carsPerPage;
 
     @Resource
@@ -85,6 +83,9 @@ public class CarListPageController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDirection);
         model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("cartCount", cartService.getCartCount());    //userId
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 
         return CAR_LIST_PAGE;
     }

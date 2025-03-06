@@ -1,18 +1,8 @@
 {
   "properties": [
     {
-      "name": "spring.sort.car-defauit-direction",
-      "type": "java.lang.String",
-      "description": "Description for spring.mvc.sort.car-defauit-direction."
-    },
-    {
-      "name": "spring.sort.car-defauit-field",
-      "type": "java.lang.String",
-      "description": "Description for spring.mvc.sort.car-defauit-field."
-    },
-    {
       "name": "spring.pagination.cars-per-page",
       "type": "java.lang.String",
       "description": "Description for spring.pagination.cars-per-page."
-    }
-  ] }
+  }
+] }

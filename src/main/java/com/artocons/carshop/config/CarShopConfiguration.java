@@ -10,11 +10,13 @@ public class CarShopConfiguration implements WebMvcConfigurer {
 
     private static final String LOGIN_PAGE = "loginPage";
     private static final String ADMIN_PANEL_PAGE = "admin/adminPanelPage";
+    private static final String CART_PAGE = "cartPage";
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController(CarShopConstants.LOGIN_PATH).setViewName(LOGIN_PAGE);
         registry.addViewController(CarShopConstants.ADMIN_PATH).setViewName(ADMIN_PANEL_PAGE);
+        registry.addViewController(CarShopConstants.CART_PATH).setViewName(CART_PAGE);
         registry.addRedirectViewController(CarShopConstants.ROOT_PATH, CarShopConstants.CARS_PATH);
     }
 }
