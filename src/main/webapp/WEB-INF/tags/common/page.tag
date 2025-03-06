@@ -22,8 +22,10 @@
         </div>
     </header>
     <c:if test="${showMenu}">
-        <common:menu currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
+        <common:menu/>
     </c:if>
+    <common:myCart/>
+    <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
     <jsp:doBody/>
 </div>
 </body>

@@ -2,8 +2,12 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ taglib prefix="util" tagdir="/WEB-INF/tags/util" %>
 <%@ taglib prefix="car" tagdir="/WEB-INF/tags/car" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<common:page pageTitle="Car list" showMenu="true">
+<c:url var="urlCart" value="/cart/add"/>
+
+<common:page pageTitle="Car list" showMenu="false">
+<%--    <form action="${url}?quantity=${quantity}" method="POST">--%>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -17,10 +21,13 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="car" items="${cars.content}">
-            <car:tile car="${car}"/>
-        </c:forEach>
+            <form:form action="${urlCart}" method="post" modelAttribute="cars">
+                <c:forEach var="car" items="${cars.content}">
+                    <car:tile car="${car}"/>
+                </c:forEach>
+            </form:form>
         </tbody>
     </table>
+<%--    </form>--%>
     <common:pagination currentPage="${currentPage}" totalPages="${totalPages}" sortField="${sortField}" sortDir="${sortDir}"/>
 </common:page>
