@@ -1,6 +1,7 @@
 package com.artocons.carshop.persistence.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class Cart {
 
     @Column(name = "quantity")
     @NotNull
+    @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;
 
     @Column(name = "date")

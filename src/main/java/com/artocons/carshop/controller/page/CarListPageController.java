@@ -26,12 +26,11 @@ import static com.artocons.carshop.util.CarShopConstants.*;
 public class CarListPageController {
 
     private static final String CAR_LIST_PAGE = "carListPage";
-    private static final String CART_PAGE = "cartPage";
     private static final String CARS = "cars";
     private static final String SORT_FIED_DEFAULT = "price";
     private static final String SORT_DIR_DEFAULT = "asc";
     private static final int PAGE_START = 1;
-    private static final String QUANTITY_DEFAULT = "1";
+
 
     @Value("${spring.pagination.cars-per-page}")
     private Integer carsPerPage;
@@ -42,7 +41,6 @@ public class CarListPageController {
     private StockService stockService;
     @Resource
     private CartService cartService;
-    private int quantity;
 
     @GetMapping
     public String getCarsList(Model model) {
@@ -89,31 +87,5 @@ public class CarListPageController {
         model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
 
         return CAR_LIST_PAGE;
-    }
-
-    @PostMapping("/addToCart")
-    public String addCarToCart(@RequestParam("productId") Long productId,
-                               @RequestParam(defaultValue = QUANTITY_DEFAULT) String quant,
-                               HttpSession session) {
-        try {
-            this.quantity = Integer.parseInt(quant.trim());
-        } catch (NumberFormatException nfe)
-        {
-            nfe.printStackTrace();
-            return "redirect:/";
-        }
-        Cart cart = new Cart(productId, quantity, Optional.of(""));
-        session.setAttribute("cart", cart);
-
-        cartService.addItemToCart(cart);
-
-        return "redirect:/";
-    }
-
-    @GetMapping("/cart")
-    public String viewCart(HttpSession session, Model model) {
-        Cart cart = (Cart) session.getAttribute("cart");
-        model.addAttribute("cart", cart);
-        return CART_PAGE;
     }
 }

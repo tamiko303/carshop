@@ -6,6 +6,7 @@ public class CarShopConstants {
     public static final String CARS_PATH = "/cars";
     public static final String ADMIN_PATH = "/admin";
     public static final String LOGIN_PATH = "/login";
+    public static final String CART_PATH = "/cart";
 
     private CarShopConstants() {
         // instance not allowed
