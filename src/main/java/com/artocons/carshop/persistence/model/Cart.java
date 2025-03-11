@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Optional;
 
 @Entity
 @Table(name = "cart")
@@ -16,10 +15,10 @@ public class Cart {
 
     @Column(name = "product")
     @NotNull
-    private Long product_id;
+    private Long product;
 
 //    @Column(name = "user")
-//    private Long user_id;
+//    private Long user;
 
     @Column(name = "quantity")
     @NotNull
@@ -32,15 +31,14 @@ public class Cart {
 
     @Column(name = "description")
     @Lob
-//    @NotNull
     private String description;
 
-    public <Cart> Cart(Long productId, int quantity, Optional<String> description) {
-//        this.user_id = userId;
-        this.product_id = productId;
+    public <Cart> Cart(Long product, int quantity, String description) {
+//        this.user = user;
+        this.product = product;
         this.quantity = quantity;
         this.date = new Date();
-        this.description = description.orElse("");
+        this.description = description;
     }
 
     public Cart() {
@@ -49,10 +47,10 @@ public class Cart {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Long getProductId() { return product_id; }
-    public void setProductId(Long product_id) { this.product_id = product_id; }
-//    public Long getUserId() { return user_id; }
-//    public void setUserId(Long user_id) { this.user_id = user_id; }
+    public Long getProduct() { return product; }
+    public void setProduct(Long product) { this.product = product; }
+//    public Long getUser() { return user; }
+//    public void setUser(Long user) { this.user = user; }
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public Date getDate() { return date; }

@@ -14,13 +14,20 @@
     <td><c:out value="${car.colors}"/></td>
     <td><c:out value="$ ${car.price}"/></td>
     <td>
-        <label>
-            <input type="number" name="quantity" min="1" required value=${quantity}>
-        </label>
-        <%--        <form:input path="quantity" maxlength="5"/>--%>
+        <input type="number" name="quantity" min="1" required value="1">
+        <input type="hidden" name="product" readonly value="${car.id}">
+<%--        <form:hidden path="product" value="${car.id}"/>--%>
+<%--        <form:input path="quantity" value="1" maxlength="5"/>--%>
+<%--        <form:errors path="quantity" />--%>
     </td>
     <td>
-        <button type="submit" class="btn btn-danger btn-sm">Add to Cart</button>
+        <button
+            type="submit"
+            id="bth-add"
+            class="btn btn-danger btn-sm"
+            onclick="addToCart()">
+                Add to Cart
+        </button>
 <%--        <form:button>Add to Cart</form:button>--%>
     </td>
 <%--    </form>--%>

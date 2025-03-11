@@ -34,10 +34,9 @@ create table car_colors (
 
 create table cart (
     id bigint not null,
-    user_id bigint,
-    product_id bigint not null,
+    product long not null,
     quantity int not null,
     date date not null,
     description clob,
-    primary key (id, user_id, product_id)
+    primary key (id, product)
 );

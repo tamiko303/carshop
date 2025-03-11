@@ -21,11 +21,13 @@
         </tr>
         </thead>
         <tbody>
-            <form:form action="${urlCart}" method="post" modelAttribute="cars">
-                <c:forEach var="car" items="${cars.content}">
+
+            <c:forEach var="car" items="${cars.content}">
+                <form method="post" action="${urlCart}" id="addToCart" >
                     <car:tile car="${car}"/>
-                </c:forEach>
-            </form:form>
+                </form>
+            </c:forEach>
+
         </tbody>
     </table>
 <%--    </form>--%>

@@ -1,12 +1,10 @@
 package com.artocons.carshop.service;
 
-import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.Cart;
-import com.artocons.carshop.persistence.model.Stock;
+import com.artocons.carshop.persistence.model.ResultData;
 import com.artocons.carshop.persistence.repository.CartRepository;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -26,24 +24,36 @@ public class CartService {
     @Autowired
     private CarService carService;
 
-    public void addItemToCart(Cart cartItem) throws ServiceException {
+    public List<Cart> getCartList() {
+        List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+
+        if (CollectionUtils.isEmpty(cart)){
+            Cart cartItem = new Cart();
+            cart = new ArrayList<Cart>();
+            cart.add(cartItem);
+        }
+        return cart;
+    }
+
+    public ResultData addItemToCart(Cart cartNew) throws ServiceException {
         try {
-            String userId = (String) session.getAttribute("user");
-            Cart cartQuery = new Cart();
-//            cartQuery.setUserId(userId);
-            cartQuery.setProductId(cartItem.getProductId());
+            List<Cart> cartOldItms = (List<Cart>) session.getAttribute("cart");
 
-            Example<Cart> example = Example.of(cartQuery);
+            Cart existCart = cartOldItms.stream()
+                    .filter(item -> item.getProduct().equals(cartNew.getProduct()))
+                    .findAny()
+                    .orElse(null);
 
-            Optional<Cart> existCarts = cartRepository.findOne(example);
-            if (existCarts.isPresent()) {
-//                TODO
+            if (existCart == null) {
+                session.setAttribute("cart", cartNew);
+                return new ResultData(getCartCount(), getCartTotalCost());
             }
 
-            cartRepository.save(cartItem);
+//            cartRepository.save(cartNew);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
+        return null;
     }
 
     public int getCartCount() {
@@ -65,13 +75,13 @@ public class CartService {
         Set<Long> productIds = new HashSet<>();
 
         for (Cart cartItem : cart) {
-            productIds.add(cartItem.getProductId());
+            productIds.add(cartItem.getProduct());
         }
 
         BigDecimal totalCost = BigDecimal.valueOf(0);
         for (Cart cartItem : cart) {
-            if ( productIds.contains(cartItem.getProductId())){
-                BigDecimal cost = BigDecimal.valueOf(cartItem.getQuantity()).multiply(carService.getPriceById(cartItem.getProductId()));
+            if ( productIds.contains(cartItem.getProduct())){
+                BigDecimal cost = BigDecimal.valueOf(cartItem.getQuantity()).multiply(carService.getPriceById(cartItem.getProduct()));
                 totalCost.add(cost);
             }
         }
