@@ -64,7 +64,7 @@ public class CarListPageController {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
-        Pageable pageRequest = PageRequest.of(PAGE_START - 1, carsPerPage, sort);
+        Pageable pageRequest = PageRequest.of(pageNo - 1, carsPerPage, sort);
 
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), availableCars.size());
@@ -84,6 +84,7 @@ public class CarListPageController {
         model.addAttribute("sortDir", sortDirection);
         model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
 
+        model.addAttribute("cart", cartService.getCartList());
         model.addAttribute("cartCount", cartService.getCartCount());    //userId
         model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 

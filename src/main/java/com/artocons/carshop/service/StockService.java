@@ -25,7 +25,8 @@ public class StockService {
 
         return stockRepository.findAll(Pageable.unpaged()).getContent()
                 .stream()
-                .filter(i -> i.getStock() > i.getReserved() )
+//                .filter(i -> i.getStock() > i.getReserved() )
+                .filter(i -> i.getStock() > 0  )
                 .collect(Collectors.toList());
     }
 
