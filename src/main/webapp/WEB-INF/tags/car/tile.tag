@@ -3,7 +3,6 @@
 <%@ attribute name="car" required="true" type="com.artocons.carshop.persistence.model.Car" %>
 <c:url var="pdpLink" value="/cars/${car.id}"/>
 <tr>
-<%--    <form action="${url}/${car.id}?quantity=${quantity}" method="post" >--%>
     <td>
         <a href="${pdpLink}">
             <img src="<c:url value="https://raw.githubusercontent.com/Alex-Job/img/refs/heads/main/car.png"/>" width="100" height="100" alt="Car image">
@@ -15,7 +14,8 @@
     <td><c:out value="$ ${car.price}"/></td>
     <td>
         <input type="number" name="quantity" min="1" required value="1">
-        <input type="hidden" name="product" readonly value="${car.id}">
+        <span id="quantityError" style="color: red" ></span>
+<%--        <input type="hidden" name="product" readonly value="${car.id}">--%>
 <%--        <form:hidden path="product" value="${car.id}"/>--%>
 <%--        <form:input path="quantity" value="1" maxlength="5"/>--%>
 <%--        <form:errors path="quantity" />--%>
@@ -30,5 +30,4 @@
         </button>
 <%--        <form:button>Add to Cart</form:button>--%>
     </td>
-<%--    </form>--%>
 </tr>

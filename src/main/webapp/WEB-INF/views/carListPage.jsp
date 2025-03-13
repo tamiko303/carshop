@@ -4,7 +4,6 @@
 <%@ taglib prefix="car" tagdir="/WEB-INF/tags/car" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<c:url var="urlCart" value="/cart/add"/>
 
 <common:page pageTitle="Car list" showMenu="false">
 <%--    <form action="${url}?quantity=${quantity}" method="POST">--%>
@@ -23,7 +22,7 @@
         <tbody>
 
             <c:forEach var="car" items="${cars.content}">
-                <form method="post" action="${urlCart}" id="addToCart" >
+                <form method="post" action="/cars/${car.id}/add" id="addToCart" >
                     <car:tile car="${car}"/>
                 </form>
             </c:forEach>

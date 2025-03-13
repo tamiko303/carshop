@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,10 @@ public class StockService {
 //                .filter(i -> i.getStock() > i.getReserved() )
                 .filter(i -> i.getStock() > 0  )
                 .collect(Collectors.toList());
+    }
+
+    public Optional<Stock> getStocksByCarId(Long id) {
+        return stockRepository.findById(id);
     }
 
     @Transactional

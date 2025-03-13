@@ -23,31 +23,20 @@
                 type : "POST",
                 url : "${home}${url}",
                 data : {
-                    product: $("#product").val(),
-                    quantity: $("#quantity").val(),
+                   quantity: $("#quantity").val(),
                 },
                 success : function(data) {
                     console.log("SUCCESS: ", data);
-                    // display(data);
                 },
                 error : function(e) {
                     console.log("ERROR: ", e);
-                    // display(e);
+                    $('#quantityError').text(e);
                 },
                 done : function(e) {
                     console.log("DONE");
                     enableAddButton(true);
                 }
             });
-
-            // var posting = $.post( url, data: { pr: product,
-            //                                     q: quantity } );
-            //
-            // posting.done(function( data ) {
-            //     var content = $( data ).find( "#content" );
-            //
-            //     enableAddButton(true);
-            // } );
         } );
 
         function enableAddButton(flag) {
