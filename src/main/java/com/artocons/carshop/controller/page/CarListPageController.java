@@ -1,22 +1,25 @@
 package com.artocons.carshop.controller.page;
 
-import com.artocons.carshop.persistence.model.Car;
-import com.artocons.carshop.persistence.model.Cart;
-import com.artocons.carshop.persistence.model.Stock;
+import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.StockService;
 import com.artocons.carshop.util.CarShopHelper;
+import com.artocons.carshop.validation.QuantityValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
 
@@ -39,6 +42,7 @@ public class CarListPageController {
     private StockService stockService;
     @Resource
     private CartService cartService;
+    private QuantityValidator quantityValidator;
 
     @GetMapping
     public String getCarsList(Model model) {
@@ -89,5 +93,35 @@ public class CarListPageController {
         model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 
         return CAR_LIST_PAGE;
+    }
+
+    @PostMapping("/{productId}/add")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> addToCart(@PathVariable(value = "productId") long productId,
+                                       @Valid @RequestBody int quantity,
+                                       BindingResult errors) {
+
+        AjaxResponse result = new AjaxResponse();
+        quantityValidator.validate(quantity, errors);
+
+        if (errors.hasErrors()) {
+            result.setMsg(errors.getAllErrors()
+                    .stream().map(x -> x.getDefaultMessage())
+                    .collect(Collectors.joining(",")));
+            return ResponseEntity.badRequest().body(result);
+        }
+
+        Cart cartItemNew = new Cart(productId, quantity, "" );
+        ResultData newData = cartService.addItemToCart(cartItemNew);
+
+        if (newData != null) {
+            result.setMsg("success");
+        } else {
+            result.setMsg("no data found!");
+        }
+
+        result.setResult(newData);
+        return (ResponseEntity<?>) ResponseEntity.ok(result);
+
     }
 }
