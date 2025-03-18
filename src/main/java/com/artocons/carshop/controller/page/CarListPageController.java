@@ -9,11 +9,13 @@ import com.artocons.carshop.validation.QuantityValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -95,14 +97,15 @@ public class CarListPageController {
         return CAR_LIST_PAGE;
     }
 
-    @PostMapping("/{productId}/add")
+    @PostMapping(path = "/{productId}/add", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE} )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<?> addToCart(@PathVariable(value = "productId") long productId,
-                                       @Valid @RequestBody int quantity,
-                                       BindingResult errors) {
+    public ResponseEntity<Object> addToCart(@PathVariable(value = "productId") long productId,
+//                                       @Valid @RequestBody int quantity,
+                                            @Valid @RequestBody AjaxRequest data,
+                                            BindingResult errors) {
 
         AjaxResponse result = new AjaxResponse();
-        quantityValidator.validate(quantity, errors);
+        quantityValidator.validate(data.getQuantity(), errors);
 
         if (errors.hasErrors()) {
             result.setMsg(errors.getAllErrors()
@@ -111,7 +114,7 @@ public class CarListPageController {
             return ResponseEntity.badRequest().body(result);
         }
 
-        Cart cartItemNew = new Cart(productId, quantity, "" );
+        Cart cartItemNew = new Cart(productId, data.getQuantity(), "" );
         ResultData newData = cartService.addItemToCart(cartItemNew);
 
         if (newData != null) {
@@ -121,7 +124,7 @@ public class CarListPageController {
         }
 
         result.setResult(newData);
-        return (ResponseEntity<?>) ResponseEntity.ok(result);
+        return ResponseEntity.ok(result);
 
     }
 }
