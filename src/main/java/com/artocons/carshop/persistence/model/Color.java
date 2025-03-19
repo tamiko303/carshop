@@ -1,17 +1,26 @@
 package com.artocons.carshop.persistence.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "color")
 public class Color {
 
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @Getter
     private String name;
 
     @ManyToMany(mappedBy = "colors")
@@ -21,9 +30,6 @@ public class Color {
     }
 
     public Color(String name) { this.name = name; }
-    public Long getId() { return id; }
-
-    public void setId(Long id) { this.id = id; }
 
     public String getColorName() { return name; }
 
