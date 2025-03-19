@@ -11,6 +11,59 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $( "#addToCart" ).on( "submit", function( event ) {
+
+            enableAddButton(false);
+            event.preventDefault();
+
+            url = $form.attr( "action" )
+
+            $.ajax({
+                type : "POST",
+                url : "${home}${url}",
+                data : {
+                   quantity: $("#quantity").val(),
+                },
+                success : function(data) {
+                    console.log("SUCCESS: ", data);
+                },
+                error : function(e) {
+                    console.log("ERROR: ", e);
+                    $('#quantityError').text(e);
+                },
+                done : function(e) {
+                    console.log("DONE");
+                    enableAddButton(true);
+                }
+            });
+        } );
+
+        function enableAddButton(flag) {
+            $("#btn-add").prop("disabled", flag);
+        }
+
+
+        // function callController(product, quantity) {
+        //     // Get the value you want to send
+        //     let quantity = document.getElementById("q").value;
+        //
+        //     // Make an AJAX request to the controller method
+        //     fetch('/cart/add', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json; charset=utf-8',
+        //             'Data-Type': 'json',
+        //         },
+        //         body: 'quantity=' + encodeURIComponent(quantity)
+        //     })
+        //         .then(response => response.text())
+        //         .then(data => {
+        //             // Handle the response from the controller
+        //             console.log(data);
+        //         });
+        // }
+    </script>
     <meta charset="utf-8">
     <title><c:out value="${pageTitle}"/></title>
 </head>
@@ -22,8 +75,10 @@
         </div>
     </header>
     <c:if test="${showMenu}">
-        <common:menu currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
+        <common:menu/>
     </c:if>
+    <common:myCart/>
+    <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
     <jsp:doBody/>
 </div>
 </body>

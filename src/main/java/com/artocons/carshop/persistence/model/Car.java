@@ -1,9 +1,5 @@
 package com.artocons.carshop.persistence.model;
 
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -157,7 +153,6 @@ public class Car {
 
     public Set<Color> getColors() { return colors; }
 
-    @IndexedEmbedded
     public void setColors(Set<Color> colors) { this.colors = colors; }
 
     public String convertColorsToString(Set<Color> colors) {
