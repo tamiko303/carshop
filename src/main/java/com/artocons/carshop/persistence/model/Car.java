@@ -1,7 +1,9 @@
 package com.artocons.carshop.persistence.model;
 
 import com.artocons.carshop.persistence.dtos.ProductDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 @Setter
 @Entity
 @Table(name = "car")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Car {
 
     @Setter
@@ -94,7 +98,6 @@ public class Car {
     )
     private Set<Color> colors = new HashSet<>();
 
-    public Car(){}
     public Car(String model,
                String brand,
                String description,
@@ -115,31 +118,6 @@ public class Car {
         this.engineType = engineType;
         this.engineCapacity = engineCapacity;
         this.gearboxType = gearboxType;
-    }
-    public Car(Long id,
-               String model,
-               String brand,
-               String description,
-               BigDecimal price,
-               Long productionYear,
-               Long mileage,
-               String bodyType,
-               String engineType,
-               String engineCapacity,
-               String gearboxType,
-               Set<Color> colors) {
-        this.id = id;
-        this.model = model;
-        this.brand = brand;
-        this.description = description;
-        this.price = price;
-        this.productionYear = productionYear;
-        this.mileage = mileage;
-        this.bodyType = bodyType;
-        this.engineType = engineType;
-        this.engineCapacity = engineCapacity;
-        this.gearboxType = gearboxType;
-        this.colors = colors;
     }
 
     public static ProductDTO convertToProductDTO(Car car) {

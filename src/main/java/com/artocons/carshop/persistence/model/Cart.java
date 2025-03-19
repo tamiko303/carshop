@@ -1,7 +1,9 @@
 package com.artocons.carshop.persistence.model;
 
 import com.artocons.carshop.persistence.dtos.CartDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,6 +15,8 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "cart")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cart {
 
     @Id
@@ -46,8 +50,6 @@ public class Cart {
     @Column(name = "description")
     @Lob
     private String description;
-
-    public Cart() {}
 
     public <Cart> Cart(Long product, int quantity, String description) {
 //        this.user = user;

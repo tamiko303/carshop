@@ -6,16 +6,14 @@ import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.StockService;
 import com.artocons.carshop.util.CarShopHelper;
 import com.artocons.carshop.validation.QuantityValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -27,6 +25,7 @@ import static com.artocons.carshop.util.CarShopConstants.*;
 
 @Controller
 @RequestMapping(CARS_PATH)
+@RequiredArgsConstructor
 public class CarListPageController {
 
     private static final String CAR_LIST_PAGE = "carListPage";
@@ -44,7 +43,15 @@ public class CarListPageController {
     private StockService stockService;
     @Resource
     private CartService cartService;
-    private QuantityValidator quantityValidator;
+
+    private QuantityValidator quantityValidator = new QuantityValidator();
+
+    public CarListPageController(CarService carService, StockService stockService, CartService cartService, QuantityValidator quantityValidator ){
+        this.carService = carService;
+        this.stockService = stockService;
+        this.cartService = cartService;
+        this.quantityValidator = quantityValidator;
+    }
 
     @GetMapping
     public String getCarsList(Model model) {
@@ -62,7 +69,7 @@ public class CarListPageController {
                                          @RequestParam("query") String query,
                                          Model model) {
 
-        List<Car> cars = carService.getCarsFilteredByQuery(query);
+        List<Car> cars = carService.searchCars(query);
         List<Stock> stocks = stockService.getAllAvailableCarsId();
 
         List<Car> availableCars = CarShopHelper.findIntersection(cars, stocks);
@@ -97,15 +104,18 @@ public class CarListPageController {
         return CAR_LIST_PAGE;
     }
 
-    @PostMapping(path = "/{productId}/add", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE} )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping(path = "/{productId}/add" )
+//    , consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE} )
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> addToCart(@PathVariable(value = "productId") long productId,
-//                                       @Valid @RequestBody int quantity,
-                                            @Valid @RequestBody AjaxRequest data,
-                                            BindingResult errors) {
+                                            @Valid @ModelAttribute AjaxRequest data,
+                                            BindingResult errors ) {
+
 
         AjaxResponse result = new AjaxResponse();
-        quantityValidator.validate(data.getQuantity(), errors);
+
+        Cart cartItemNew = new Cart(productId, data.getQuantity(), "" );
+        quantityValidator.validate(cartItemNew, errors);
 
         if (errors.hasErrors()) {
             result.setMsg(errors.getAllErrors()
@@ -114,7 +124,6 @@ public class CarListPageController {
             return ResponseEntity.badRequest().body(result);
         }
 
-        Cart cartItemNew = new Cart(productId, data.getQuantity(), "" );
         ResultData newData = cartService.addItemToCart(cartItemNew);
 
         if (newData != null) {

@@ -70,7 +70,7 @@ public class CartService {
 
         if (CollectionUtils.isEmpty(cart)){
             return BigDecimal.valueOf(0);
-        };
+        }
 
         Set<Long> productIds = new HashSet<>();
 

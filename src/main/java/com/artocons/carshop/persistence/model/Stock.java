@@ -1,6 +1,8 @@
 package com.artocons.carshop.persistence.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -13,22 +15,18 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Entity
 @Table(name = "stock")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Stock {
 
-    @Setter
-    @Getter
     @Id
     @Column(name = "product_id")
     private Long productId;
 
-    @Setter
-    @Getter
     @Column(name = "stock")
     @NotNull
     private Long stock;
 
-    @Setter
-    @Getter
     @Column(name = "reserved")
     @NotNull
     private Long reserved;

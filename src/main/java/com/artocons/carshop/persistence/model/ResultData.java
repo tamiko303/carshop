@@ -1,29 +1,15 @@
 package com.artocons.carshop.persistence.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResultData {
-
-        Integer count ;
-        BigDecimal total;
-
-        public ResultData(){
-
-        }
-        public ResultData(Integer count, BigDecimal total) {
-                this.count = count;
-                this.total = total;
-        }
-//        public Integer getCount(){
-//                return count;
-//        }
-        public void setCount(Integer count){
-                this.count = count;
-        }
-//        public BigDecimal getTotal(){
-//                return total;
-//        }
-        public void setTotal(BigDecimal total){
-                this.total = total;
-        }
+    Integer count ;
+    BigDecimal total;
 }

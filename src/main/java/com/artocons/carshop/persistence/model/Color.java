@@ -1,6 +1,8 @@
 package com.artocons.carshop.persistence.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "color")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Color {
 
     @Setter
@@ -25,9 +29,6 @@ public class Color {
 
     @ManyToMany(mappedBy = "colors")
     private final Set<Car> cars = new HashSet<>();
-
-    public  Color(){
-    }
 
     public Color(String name) { this.name = name; }
 
