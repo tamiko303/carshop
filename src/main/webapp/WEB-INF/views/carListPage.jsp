@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<common:page pageTitle="Car list" showMenu="false">
+<common:page pageTitle="Car list" showMenu="false" showSearch="true">
 <%--    <form action="${url}?quantity=${quantity}" method="POST">--%>
     <table class="table table-striped">
         <thead>

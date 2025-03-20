@@ -2,6 +2,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
 <%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="showSearch" required="true" type="java.lang.Boolean" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,7 +79,9 @@
         <common:menu/>
     </c:if>
     <common:myCart/>
-    <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
+    <c:if test="${showSearch}">
+        <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
+    </c:if>
     <jsp:doBody/>
 </div>
 </body>

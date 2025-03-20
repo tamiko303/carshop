@@ -36,8 +36,8 @@ public class CarService {
         }
     }
 
-    public Page<Car> searchCars(String query, Pageable pageable) {
-        return carRepository.searchByBrandOrModel(query, pageable);
+    public List<Car> searchCars(String query) {
+        return carRepository.searchByBrandOrModel(query, Pageable.unpaged()).getContent();
     }
 
     public BigDecimal getPriceById(long productId) {
@@ -49,6 +49,10 @@ public class CarService {
         });
 
         return price.get();
+    }
+
+    public Car getCarById(long productId) {
+        return carRepository.findById(productId).orElse(null);
     }
 
 }
