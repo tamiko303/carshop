@@ -44,14 +44,7 @@ public class CarListPageController {
     @Resource
     private CartService cartService;
 
-    private QuantityValidator quantityValidator = new QuantityValidator();
-
-    public CarListPageController(CarService carService, StockService stockService, CartService cartService, QuantityValidator quantityValidator ){
-        this.carService = carService;
-        this.stockService = stockService;
-        this.cartService = cartService;
-        this.quantityValidator = quantityValidator;
-    }
+    private final QuantityValidator quantityValidator;
 
     @GetMapping
     public String getCarsList(Model model) {
@@ -107,15 +100,11 @@ public class CarListPageController {
     @PostMapping(path = "/{productId}/add" )
 //    , consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE} )
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Object> addToCart(@PathVariable(value = "productId") long productId,
+    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
                                             @Valid @ModelAttribute AjaxRequest data,
                                             BindingResult errors ) {
 
-
         AjaxResponse result = new AjaxResponse();
-
-        Cart cartItemNew = new Cart(productId, data.getQuantity(), "" );
-        quantityValidator.validate(cartItemNew, errors);
 
         if (errors.hasErrors()) {
             result.setMsg(errors.getAllErrors()
@@ -124,15 +113,14 @@ public class CarListPageController {
             return ResponseEntity.badRequest().body(result);
         }
 
-        ResultData newData = cartService.addItemToCart(cartItemNew);
+        ResultData newResData = cartService.addItemToCart(new Cart(productId, data.getQuantity(), "" ));
 
-        if (newData != null) {
-            result.setMsg("success");
-        } else {
-            result.setMsg("no data found!");
+        if (newResData == null) {
+            return ResponseEntity.notFound().build();
         }
 
-        result.setResult(newData);
+        result.setMsg("success");
+        result.setResult(newResData);
         return ResponseEntity.ok(result);
 
     }
