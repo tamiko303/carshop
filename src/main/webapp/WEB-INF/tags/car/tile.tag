@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ attribute name="car" required="true" type="com.artocons.carshop.persistence.model.Car" %>
-<c:url var="pdpLink" value="/cars/${car.id}"/>
+<c:url var="pdpLink" value="/product/${car.id}"/>
 <tr>
     <td>
         <a href="${pdpLink}">
