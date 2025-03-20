@@ -3,6 +3,8 @@ package com.artocons.carshop.service;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.ResultData;
 import com.artocons.carshop.persistence.repository.CartRepository;
+import com.artocons.carshop.validation.QuantityValidator;
+import org.apache.jasper.tagplugins.jstl.core.If;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,12 @@ public class CartService {
     @Autowired
     private CarService carService;
 
+    private final QuantityValidator quantityValidator;
+
+    public CartService(QuantityValidator quantityValidator) {
+        this.quantityValidator = quantityValidator;
+    }
+
     public List<Cart> getCartList() {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
 
@@ -36,18 +44,24 @@ public class CartService {
     }
 
     public ResultData addItemToCart(Cart cartNew) throws ServiceException {
+
+        Error error = (Error) quantityValidator.validate(cartNew);
+
         try {
+
             List<Cart> cartOldItms = (List<Cart>) session.getAttribute("cart");
 
-            Cart existCart = cartOldItms.stream()
+            if (cartOldItms == null) {
+                List<Cart> newCart = new ArrayList<>();
+                newCart.add(cartNew);
+                session.setAttribute("cart", newCart);
+                return new ResultData(getCartCount(), getCartTotalCost());
+            }
+
+            Cart existCartItemByProduct = cartOldItms.stream()
                     .filter(item -> item.getProduct().equals(cartNew.getProduct()))
                     .findAny()
                     .orElse(null);
-
-            if (existCart == null) {
-                session.setAttribute("cart", cartNew);
-                return new ResultData(getCartCount(), getCartTotalCost());
-            }
 
 //            cartRepository.save(cartNew);
         } catch (Exception e) {
@@ -72,18 +86,10 @@ public class CartService {
             return BigDecimal.valueOf(0);
         }
 
-        Set<Long> productIds = new HashSet<>();
-
-        for (Cart cartItem : cart) {
-            productIds.add(cartItem.getProduct());
-        }
-
         BigDecimal totalCost = BigDecimal.valueOf(0);
         for (Cart cartItem : cart) {
-            if ( productIds.contains(cartItem.getProduct())){
                 BigDecimal cost = BigDecimal.valueOf(cartItem.getQuantity()).multiply(carService.getPriceById(cartItem.getProduct()));
-                totalCost.add(cost);
-            }
+                totalCost = totalCost.add(cost);
         }
         return totalCost;
     }

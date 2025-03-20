@@ -3,34 +3,31 @@ package com.artocons.carshop.validation;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.Stock;
 import com.artocons.carshop.service.StockService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-import javax.annotation.Resource;
-import org.springframework.validation.Validator;
-import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 import static org.springframework.data.util.CastUtils.cast;
 
-public class QuantityValidator implements Validator {
+@Component
+@RequiredArgsConstructor
+public class QuantityValidator  {
+    private final StockService stockService;
 
-    @Resource
-    private StockService stockService;
+//    public QuantityValidator(StockService stockService) {
+//        this.stockService = stockService;
 
-    @Override
-    public boolean supports(@NotNull Class<?> clazz) {
-        return Cart.class.equals(clazz);
-    }
+    public Errors validate(Cart cart) {
 
-    @Override
-    public void validate(@NotNull Object target, @NotNull Errors errors) {
-        Cart cart = (Cart) target;
-        Optional<Stock> stock = stockService.getStocksByCarId(cart.getId());
+        Optional<Stock> stock = stockService.getStocksByCarId(cart.getProduct());
 
-        if (cart.getQuantity() > (stock.orElseGet(()->cast(0))).getStock()) {
+        Errors errors = null;
+        if (cart.getQuantity() > (stock.orElseGet(() -> cast(0))).getStock())
             errors.rejectValue("quantity", "", "The required quantity is not available!");
-        }
 
+        return errors;
     }
 
 }
