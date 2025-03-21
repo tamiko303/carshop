@@ -1,5 +1,6 @@
 package com.artocons.carshop.service;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.ResultData;
 import com.artocons.carshop.persistence.repository.CartRepository;
@@ -43,11 +44,11 @@ public class CartService {
         return cart;
     }
 
-    public ResultData addItemToCart(Cart cartNew) throws ServiceException {
-
-        Error error = (Error) quantityValidator.validate(cartNew);
+    public ResultData addItemToCart(Cart cartNew) throws ServiceException, ResourceNotFoundException {
 
         try {
+
+            quantityValidator.validate(cartNew);
 
             List<Cart> cartOldItms = (List<Cart>) session.getAttribute("cart");
 
@@ -58,16 +59,28 @@ public class CartService {
                 return new ResultData(getCartCount(), getCartTotalCost());
             }
 
-            Cart existCartItemByProduct = cartOldItms.stream()
-                    .filter(item -> item.getProduct().equals(cartNew.getProduct()))
-                    .findAny()
-                    .orElse(null);
+            boolean flag = false;
 
+            ListIterator<Cart> iterator =  cartOldItms.listIterator();
+            while (iterator.hasNext()) {
+                Cart nextItem = iterator.next();
+                if (nextItem.getProduct().equals(cartNew.getProduct())) {
+                    cartNew.setQuantity(nextItem.getQuantity() + cartNew.getQuantity());
+                    iterator.set(cartNew);
+                    flag = true;
+                }
+            }
+
+            if (!flag) {
+                cartOldItms.add(cartNew);
+            }
+
+            session.setAttribute("cart", cartOldItms);
 //            cartRepository.save(cartNew);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
-        return null;
+        return new ResultData(getCartCount(), getCartTotalCost());
     }
 
     public int getCartCount() {
@@ -79,7 +92,7 @@ public class CartService {
         return cart.size();
     }
 
-    public BigDecimal getCartTotalCost() {
+    public BigDecimal getCartTotalCost() throws ResourceNotFoundException {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
 
         if (CollectionUtils.isEmpty(cart)){

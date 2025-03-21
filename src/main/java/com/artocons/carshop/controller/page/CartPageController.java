@@ -19,9 +19,9 @@ public class CartPageController {
 
     @GetMapping
     public String getAllItemsCart(HttpSession session, Model model) {
-        List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+        List<Cart> cartItems = (List<Cart>) session.getAttribute("cart");
 
-        model.addAttribute("cart", cart);
+        model.addAttribute("cart", cartItems);
 
         return CART_PAGE;
     }

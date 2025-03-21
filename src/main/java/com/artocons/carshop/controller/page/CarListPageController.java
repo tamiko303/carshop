@@ -1,5 +1,6 @@
 package com.artocons.carshop.controller.page;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
@@ -9,7 +10,7 @@ import com.artocons.carshop.validation.QuantityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
+//import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +33,6 @@ public class CarListPageController {
     private static final String CARS = "cars";
     private static final String SORT_FIED_DEFAULT = "price";
     private static final String SORT_DIR_DEFAULT = "asc";
-    private static final int PAGE_START = 1;
 
     @Value("5")
     private Integer carsPerPage;
@@ -47,7 +47,7 @@ public class CarListPageController {
     private final QuantityValidator quantityValidator;
 
     @GetMapping
-    public String getCarsList(Model model) {
+    public String getCarsList(Model model) throws ResourceNotFoundException {
 //        model.addAttribute(CARS, carService.getCarsPage(Pageable.unpaged()));
 //        return CAR_LIST_PAGE;
 
@@ -60,7 +60,7 @@ public class CarListPageController {
                                          @RequestParam(defaultValue = SORT_FIED_DEFAULT) String sortField,
                                          @RequestParam(defaultValue = SORT_DIR_DEFAULT) String sortDirection,
                                          @RequestParam("query") String query,
-                                         Model model) {
+                                         Model model) throws ResourceNotFoundException {
 
         List<Car> cars = carService.searchCars(query);
         List<Stock> stocks = stockService.getAllAvailableCarsId();
@@ -97,31 +97,39 @@ public class CarListPageController {
         return CAR_LIST_PAGE;
     }
 
-    @PostMapping(path = "/{productId}/add" )
-//    , consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE} )
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
+//    @PostMapping(path = "/{productId}/add" )
+    @RequestMapping(value = "/{productId}/add", method = RequestMethod.POST)
+//    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
+    public AjaxResponse addToCart(@PathVariable(value = "productId") long productId,
                                             @Valid @ModelAttribute AjaxRequest data,
-                                            BindingResult errors ) {
+                                            BindingResult errors ) throws ResourceNotFoundException {
 
         AjaxResponse result = new AjaxResponse();
 
         if (errors.hasErrors()) {
+            result.setMsg("error");
+            result.setCode("400");
             result.setMsg(errors.getAllErrors()
                     .stream().map(x -> x.getDefaultMessage())
                     .collect(Collectors.joining(",")));
-            return ResponseEntity.badRequest().body(result);
+//            return ResponseEntity.badRequest().body(result);
+            return result;
         }
 
         ResultData newResData = cartService.addItemToCart(new Cart(productId, data.getQuantity(), "" ));
 
         if (newResData == null) {
-            return ResponseEntity.notFound().build();
+            result.setMsg("error");
+            result.setCode("404");
+//            return ResponseEntity.notFound().build();
+            return result;
         }
 
         result.setMsg("success");
+        result.setCode("200");
         result.setResult(newResData);
-        return ResponseEntity.ok(result);
+//        return ResponseEntity.ok(result);
+        return result;
 
     }
 }

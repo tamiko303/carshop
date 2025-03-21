@@ -1,5 +1,6 @@
 package com.artocons.carshop.service;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.repository.CarRepository;
 import org.springframework.data.domain.Page;
@@ -9,12 +10,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
-public class CarService {
+public class CarService{
 
     @Resource
     private CarRepository carRepository;
@@ -40,19 +40,19 @@ public class CarService {
         return carRepository.searchByBrandOrModel(query, Pageable.unpaged()).getContent();
     }
 
-    public BigDecimal getPriceById(long productId) {
-        Optional<Car> carItem = carRepository.findById(productId);
+    public BigDecimal getPriceById(long productId) throws ResourceNotFoundException {
+        Car carItem = carRepository.findById(productId)
+                                    .orElseThrow(() -> new ResourceNotFoundException("Product not found for id :: " + productId));
 
         AtomicReference<BigDecimal> price = new AtomicReference<>(BigDecimal.valueOf(0));
-        carItem.ifPresent(item -> {
-            price.set(item.getPrice());
-        });
+        price.set(carItem.getPrice());
 
         return price.get();
     }
 
-    public Car getCarById(long productId) {
-        return carRepository.findById(productId).orElse(null);
+    public Car getCarById(long productId) throws ResourceNotFoundException {
+        return carRepository.findById(productId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Product not found for id :: " + productId));
     }
 
 }

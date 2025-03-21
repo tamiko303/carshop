@@ -1,5 +1,6 @@
 package com.artocons.carshop.service;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Stock;
 import com.artocons.carshop.persistence.repository.StockRepository;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,14 +31,15 @@ public class StockService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Stock> getStocksByCarId(Long id) {
-        return stockRepository.findById(id);
+    public Stock getStocksByCarId(Long id) throws ResourceNotFoundException {
+        return stockRepository.findById(id)
+                              .orElseThrow(() -> new ResourceNotFoundException("Stock not found for carId :: " + id));
     }
 
     @Transactional
-    public void reserveStock(Long stockId, int amountToReserve) {
+    public void reserveStock(Long stockId, int amountToReserve) throws ResourceNotFoundException {
         Stock stock = stockRepository.findById(stockId)
-                .orElseThrow(() -> new IllegalArgumentException("Stock not found"));
+                                     .orElseThrow(() -> new ResourceNotFoundException("Stock not found for id :: " + stockId));
 
         if (stock.getStock() < amountToReserve) {
             throw new IllegalArgumentException("Not enough available stock to reserve");
