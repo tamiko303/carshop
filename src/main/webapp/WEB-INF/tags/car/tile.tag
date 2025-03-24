@@ -23,7 +23,7 @@
     <td>
         <button
             type="submit"
-            id="bth-add"
+            id="addToCart"
             class="btn btn-danger btn-sm"
             onclick="addToCart()">
                 Add to Cart

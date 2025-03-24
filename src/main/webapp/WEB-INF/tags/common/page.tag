@@ -50,8 +50,8 @@
                     type: "POST",
                     url: "${home}" + url,
                     data: form.serialize(), // Передаем данные в x-www-form-urlencoded формате
-                    success: function (data) {
-                        console.log(data);
+                    success: function (response) {
+                        console.log("data->", response);
                         alert("Товар добавлен в корзину!");
                         },
                     error: function (xhr) {
