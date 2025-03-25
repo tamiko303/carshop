@@ -16,8 +16,9 @@ public class QuantityValidator  {
 
         Stock stock = stockService.getStocksByCarId(cart.getProduct());
 
-        if (cart.getQuantity() > stock.getStock())
+        if (cart.getQuantity() > stock.getStock()) {
             throw new IllegalArgumentException("The required quantity is not available!");
+        }
     }
 
 }

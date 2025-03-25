@@ -5,24 +5,18 @@ import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.StockService;
-import com.artocons.carshop.util.CarShopHelper;
 import com.artocons.carshop.validation.QuantityValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
-//import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.artocons.carshop.util.CarShopConstants.*;
+import static java.lang.String.format;
 
 @Controller
 @RequestMapping(CARS_PATH)
@@ -34,15 +28,9 @@ public class CarListPageController {
     private static final String SORT_FIED_DEFAULT = "price";
     private static final String SORT_DIR_DEFAULT = "asc";
 
-    @Value("5")
-    private Integer carsPerPage;
-
-    @Resource
-    private CarService carService;
-    @Resource
-    private StockService stockService;
-    @Resource
-    private CartService cartService;
+    private final CarService carService;
+    private final StockService stockService;
+    private final CartService cartService;
 
     private final QuantityValidator quantityValidator;
 
@@ -62,23 +50,9 @@ public class CarListPageController {
                                          @RequestParam("query") String query,
                                          Model model) throws ResourceNotFoundException {
 
-        List<Car> cars = carService.searchCars(query);
-        List<Stock> stocks = stockService.getAllAvailableCarsId();
 
-        List<Car> availableCars = CarShopHelper.findIntersection(cars, stocks);
 
-        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
-                Sort.by(sortField).descending();
-
-        Pageable pageRequest = PageRequest.of(pageNo - 1, carsPerPage, sort);
-
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), availableCars.size());
-
-        List<Car> pageContent = availableCars.subList(start, end);
-
-        Page<Car> page = new PageImpl<>(pageContent, pageRequest, availableCars.size());
-
+        Page<Car> page = carService.getAvailableCarsList(query, pageNo, sortField, sortDirection, Pageable.unpaged());
         model.addAttribute(CARS, page);
 
         model.addAttribute("query", query);
@@ -97,39 +71,17 @@ public class CarListPageController {
         return CAR_LIST_PAGE;
     }
 
-//    @PostMapping(path = "/{productId}/add" )
-    @RequestMapping(value = "/{productId}/add", method = RequestMethod.POST)
-//    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
-    public AjaxResponse addToCart(@PathVariable(value = "productId") long productId,
-                                            @Valid @ModelAttribute AjaxRequest data,
-                                            BindingResult errors ) throws ResourceNotFoundException {
+    @PostMapping(path = "/{productId}/addToCart" )
+    public ResponseEntity<ResultData> addToCart(@PathVariable(value = "productId") long productId,
+                                                @Valid @ModelAttribute AjaxRequest data ) throws ResourceNotFoundException {
 
-        AjaxResponse result = new AjaxResponse();
+        ResultData newResData = new ResultData();
+        try {
+            newResData = cartService.addItemToCart(new Cart(productId, data.getQuantity(), ""));
 
-        if (errors.hasErrors()) {
-            result.setMsg("error");
-            result.setCode("400");
-            result.setMsg(errors.getAllErrors()
-                    .stream().map(x -> x.getDefaultMessage())
-                    .collect(Collectors.joining(",")));
-//            return ResponseEntity.badRequest().body(result);
-            return result;
+        } catch (Exception e) {
+            System.out.println(format("Hi! I am error (%s)", e.getMessage()));
         }
-
-        ResultData newResData = cartService.addItemToCart(new Cart(productId, data.getQuantity(), "" ));
-
-        if (newResData == null) {
-            result.setMsg("error");
-            result.setCode("404");
-//            return ResponseEntity.notFound().build();
-            return result;
-        }
-
-        result.setMsg("success");
-        result.setCode("200");
-        result.setResult(newResData);
-//        return ResponseEntity.ok(result);
-        return result;
-
+        return ResponseEntity.ok(newResData);
     }
 }

@@ -6,8 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <common:page pageTitle="Car list" showMenu="false" showSearch="true">
-<%--    <form action="${url}?quantity=${quantity}" method="POST">--%>
-    <table class="table table-striped">
+    <table class="table table-striped" id="addToCart">
         <thead>
         <tr>
             <th scope="col">Image</th>
@@ -20,15 +19,10 @@
         </tr>
         </thead>
         <tbody>
-
             <c:forEach var="car" items="${cars.content}">
-                <form method="post" action="/cars/${car.id}/add" id="addToCart" >
                     <car:tile car="${car}"/>
-                </form>
             </c:forEach>
-
         </tbody>
     </table>
-<%--    </form>--%>
     <common:pagination currentPage="${currentPage}" totalPages="${totalPages}" sortField="${sortField}" sortDir="${sortDir}"/>
 </common:page>
