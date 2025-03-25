@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableTransactionManagement
 public class CarShopConfiguration implements WebMvcConfigurer {
 
     private static final String LOGIN_PAGE = "loginPage";

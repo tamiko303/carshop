@@ -19,5 +19,5 @@ public class AjaxResponse {
     String code;
 
     @JsonView(Views.Public.class)
-    ResultData result;
+    ResultData data;
 }

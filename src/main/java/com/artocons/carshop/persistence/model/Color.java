@@ -17,23 +17,16 @@ import java.util.Set;
 @AllArgsConstructor
 public class Color {
 
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
-    @Getter
     private String name;
 
     @ManyToMany(mappedBy = "colors")
     private final Set<Car> cars = new HashSet<>();
 
-    public Color(String name) { this.name = name; }
-
-    public String getColorName() { return name; }
-
+    @Override
     public boolean equals(Object obj)
     {
         if (obj == null)
@@ -43,11 +36,13 @@ public class Color {
         Color obj2 = (Color)obj;
         if ((this.id == obj2.getId())
                 && (this.name.equals(
-                obj2.getColorName()))) {
+                obj2.getName()))) {
             return true;
         }
         return false;
     }
+
+    @Override
     public int hashCode()
     {
         int tmp = 0;

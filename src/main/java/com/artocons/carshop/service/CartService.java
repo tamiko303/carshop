@@ -3,35 +3,24 @@ package com.artocons.carshop.service;
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.ResultData;
-import com.artocons.carshop.persistence.repository.CartRepository;
 import com.artocons.carshop.validation.QuantityValidator;
-import org.apache.jasper.tagplugins.jstl.core.If;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class CartService {
 
-    @Resource
-    public CartRepository cartRepository;
-
-    @Autowired
-    private HttpSession session;
-    @Autowired
-    private CarService carService;
-
+    private final HttpSession session;
+    private final CarService carService;
+//    public final CartRepository cartRepository;
     private final QuantityValidator quantityValidator;
-
-    public CartService(QuantityValidator quantityValidator) {
-        this.quantityValidator = quantityValidator;
-    }
 
     public List<Cart> getCartList() {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");

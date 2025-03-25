@@ -1,11 +1,13 @@
 package com.artocons.carshop.persistence.dtos;
 
 import com.artocons.carshop.persistence.model.Cart;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class CartDTO {
 
     private Long product;
@@ -14,16 +16,10 @@ public class CartDTO {
     private String description;
 
     public CartDTO(Long product, Integer quantity, String description) {}
-    public CartDTO(Long product, Integer quantity, Date date, String description) {
-        this.product = product;
-        this.quantity = quantity;
-        this.date = date;
-        this.description = description;
-    }
 
-    public static Cart convertToCartEntity(CartDTO cartDTO) {
-        return new Cart( cartDTO.product,
-                         cartDTO.quantity,
-                         cartDTO.description );
-    }
+//    public static Cart convertToCartEntity(CartDTO cartDTO) {
+//        return new Cart( cartDTO.product,
+//                         cartDTO.quantity,
+//                         cartDTO.description );
+//    }
 }
