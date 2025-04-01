@@ -28,18 +28,6 @@ public class CarService{
         return carRepository.findAll(pageable);
     }
 
-//    public List<Car>  getCarsFilteredByQuery(String query) {
-//
-//        if (query.isEmpty()) {
-//            return carRepository.findAll(Pageable.unpaged()).getContent();
-//        } else {
-//            return carRepository.findAll(Pageable.unpaged()).getContent()
-//                    .stream()
-//                    .filter(i -> i.getBrand().toLowerCase().contains(query.toLowerCase())
-//                            || i.getModel().toLowerCase().contains(query.toLowerCase()))
-//                    .collect(Collectors.toList());
-//        }
-//    }
     public Page<Car> getAvailableCarsList(String query, int pageNo, String sortField, String sortDirection, Pageable pageable) {
 
         List<Car> cars = searchCars(query);
@@ -68,7 +56,7 @@ public class CarService{
         Car carItem = carRepository.findById(productId)
                                     .orElseThrow(() -> new ResourceNotFoundException("Product not found for id :: " + productId));
 
-        AtomicReference<BigDecimal> price = new AtomicReference<>(BigDecimal.valueOf(0));
+        AtomicReference<BigDecimal> price = new AtomicReference<>(BigDecimal.ZERO);
         price.set(carItem.getPrice());
 
         return price.get();

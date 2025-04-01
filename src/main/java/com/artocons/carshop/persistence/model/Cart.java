@@ -43,7 +43,7 @@ public class Cart {
     @Lob
     private String description;
 
-    public <Cart> Cart(Long product, int quantity, String description) {
+    public Cart(Long product, int quantity, String description) {
 //        this.user = user;
         this.product = product;
         this.quantity = quantity;
@@ -51,9 +51,9 @@ public class Cart {
         this.description = description;
     }
 
-    public static CartDTO convertToCartDTO(Cart cart) {
-        return new CartDTO( cart.product,
-                            cart.quantity,
-                            cart.description );
-    }
+//    public static CartDTO convertToCartDTO(Cart cart) {
+//        return new CartDTO( cart.product,
+//                            cart.quantity,
+//                            cart.description );
+//    }
 }

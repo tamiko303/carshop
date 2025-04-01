@@ -78,14 +78,16 @@ public class CartService {
         if (CollectionUtils.isEmpty(cart)){
             return 0;
         }
-        return cart.size();
+        return cart.stream()
+                   .mapToInt(Cart::getQuantity)
+                   .sum();
     }
 
     public BigDecimal getCartTotalCost() throws ResourceNotFoundException {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
 
         if (CollectionUtils.isEmpty(cart)){
-            return BigDecimal.valueOf(0);
+            return BigDecimal.ZERO;
         }
 
         BigDecimal totalCost = BigDecimal.valueOf(0);

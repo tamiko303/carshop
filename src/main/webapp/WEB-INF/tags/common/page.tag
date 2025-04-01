@@ -15,7 +15,7 @@
     <script>
         $(document).ready(function() {
             $( "#addToCart button" ).click( function( event ) {
-                debugger;
+                // debugger;
                 enableAddButton(false);
                 event.preventDefault();
                 let $form = $(this).closest('form');
