@@ -1,86 +1,55 @@
 package com.artocons.carshop.controller.page;
 
-import com.artocons.carshop.persistence.model.Car;
+import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.exception.ResourceVaidationException;
+import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.service.CarService;
-import org.springframework.beans.factory.annotation.Value;
+import com.artocons.carshop.service.CartService;
+import com.artocons.carshop.service.StockService;
+import com.artocons.carshop.validation.QuantityValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.validation.Valid;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
+//import static java.lang.String.format;
 
 @Controller
 @RequestMapping(CARS_PATH)
+@RequiredArgsConstructor
 public class CarListPageController {
 
     private static final String CAR_LIST_PAGE = "carListPage";
     private static final String CARS = "cars";
     private static final String SORT_FIED_DEFAULT = "price";
     private static final String SORT_DIR_DEFAULT = "asc";
-    private static final int PAGE_START = 1;
-    private Page<Car> page;
 
-    @Value("${spring.pagination.cars-per-page}")
-    private Integer carsPerPage;
-
-//    @Value("${spring.sort.car-defauit-field}")
-//    private String sortFieldDefault;
-//
-//    @Value("${spring.sort.car-defauit-direction}")
-//    private String sortDirDefault;
-
-    @Resource
-    private CarService carService;
+    private final CarService carService;
+    private final CartService cartService;
 
     @GetMapping
-    public String getCarsList(Model model) {
+    public String getCarsList(Model model) throws ResourceNotFoundException {
 //        model.addAttribute(CARS, carService.getCarsPage(Pageable.unpaged()));
 //        return CAR_LIST_PAGE;
 
-        return findPaginatedList(1, SORT_FIED_DEFAULT, SORT_DIR_DEFAULT, "", model);
+//        return findPaginatedList(1, SORT_FIED_DEFAULT, SORT_DIR_DEFAULT, "", model);
+        return findAvailableCarsList(1, SORT_FIED_DEFAULT, SORT_DIR_DEFAULT, "", model);
     }
 
     @GetMapping("/page/{pageNo}")
-    private String findPaginatedList(@PathVariable(value = "pageNo") int pageNo,
-                                     @RequestParam(defaultValue = SORT_FIED_DEFAULT) String sortField,
-                                     @RequestParam(defaultValue = SORT_DIR_DEFAULT) String sortDirection,
-                                     @RequestParam("query") String query,
-                                     Model model) {
-
-        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
-                Sort.by(sortField).descending();
-
-//        Page<Car> searchRes = carService.searchCars(query, pageable);
-
-        if (query.isEmpty()) {
-
-            Pageable pageRequest = PageRequest.of(pageNo - 1, carsPerPage, sort);
-            page = carService.getCarsPage(pageRequest);
-
-        } else {
-
-            List<Car> fiteredPage = carService.getCarsPage(Pageable.unpaged()).getContent()
-                    .stream()
-                    .filter(i -> i.getBrand().toLowerCase().contains(query.toLowerCase())
-                              || i.getModel().toLowerCase().contains(query.toLowerCase()) )
-                    .collect(Collectors.toList());
-
-            Pageable pageRequest = PageRequest.of(PAGE_START - 1, carsPerPage, sort);
-
-            int start = (int) pageRequest.getOffset();
-            int end = Math.min((start + pageRequest.getPageSize()), fiteredPage.size());
-
-            List<Car> pageContent = fiteredPage.subList(start, end);
-
-            page = new PageImpl<Car>(pageContent, pageRequest, fiteredPage.size());
-        }
-
+    private String findAvailableCarsList(@PathVariable(value = "pageNo") int pageNo,
+                                         @RequestParam(defaultValue = SORT_FIED_DEFAULT) String sortField,
+                                         @RequestParam(defaultValue = SORT_DIR_DEFAULT) String sortDirection,
+                                         @RequestParam("query") String query,
+                                         Model model) throws ResourceNotFoundException {
+        
+        Page<Car> page = carService.getAvailableCarsList(query, pageNo, sortField, sortDirection, Pageable.unpaged());
         model.addAttribute(CARS, page);
 
         model.addAttribute("query", query);
@@ -92,7 +61,29 @@ public class CarListPageController {
         model.addAttribute("sortDir", sortDirection);
         model.addAttribute("reverseSortDir", sortDirection.equals("asc") ? "desc" : "asc");
 
-        return CAR_LIST_PAGE;
+        model.addAttribute("cart", cartService.getCartList());
+        model.addAttribute("cartCount", cartService.getCartCount());    //userId
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 
+        return CAR_LIST_PAGE;
+    }
+
+    @PostMapping(path = "/{productId}/addToCart" )
+    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
+                                                  @Valid @ModelAttribute AjaxRequest data ) throws ResourceNotFoundException, ResourceVaidationException {
+
+        ResultData newResData = new ResultData();
+        try {
+            newResData = cartService.addItemToCart(new Cart(productId, data.getQuantity(), ""));
+
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AjaxResponse(e.getMessage(), "404", newResData));
+        } catch (ResourceVaidationException e) {
+//                System.out.println(format("Hi! I am error (%s)", e.getMessage()));
+                return ResponseEntity.badRequest().body(new AjaxResponse(e.getMessage(), "422", newResData));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AjaxResponse(e.getMessage(), "500", newResData));
+        }
+        return ResponseEntity.ok(new AjaxResponse("", "200", newResData ));
     }
 }
