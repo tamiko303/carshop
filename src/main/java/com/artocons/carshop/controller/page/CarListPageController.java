@@ -1,6 +1,7 @@
 package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
@@ -8,6 +9,7 @@ import com.artocons.carshop.service.StockService;
 import com.artocons.carshop.validation.QuantityValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
-import static java.lang.String.format;
+//import static java.lang.String.format;
 
 @Controller
 @RequestMapping(CARS_PATH)
@@ -29,10 +31,7 @@ public class CarListPageController {
     private static final String SORT_DIR_DEFAULT = "asc";
 
     private final CarService carService;
-    private final StockService stockService;
     private final CartService cartService;
-
-    private final QuantityValidator quantityValidator;
 
     @GetMapping
     public String getCarsList(Model model) throws ResourceNotFoundException {
@@ -49,9 +48,7 @@ public class CarListPageController {
                                          @RequestParam(defaultValue = SORT_DIR_DEFAULT) String sortDirection,
                                          @RequestParam("query") String query,
                                          Model model) throws ResourceNotFoundException {
-
-
-
+        
         Page<Car> page = carService.getAvailableCarsList(query, pageNo, sortField, sortDirection, Pageable.unpaged());
         model.addAttribute(CARS, page);
 
@@ -72,16 +69,21 @@ public class CarListPageController {
     }
 
     @PostMapping(path = "/{productId}/addToCart" )
-    public ResponseEntity<ResultData> addToCart(@PathVariable(value = "productId") long productId,
-                                                @Valid @ModelAttribute AjaxRequest data ) throws ResourceNotFoundException {
+    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
+                                                  @Valid @ModelAttribute AjaxRequest data ) throws ResourceNotFoundException, ResourceVaidationException {
 
         ResultData newResData = new ResultData();
         try {
             newResData = cartService.addItemToCart(new Cart(productId, data.getQuantity(), ""));
 
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AjaxResponse(e.getMessage(), "404", newResData));
+        } catch (ResourceVaidationException e) {
+//                System.out.println(format("Hi! I am error (%s)", e.getMessage()));
+                return ResponseEntity.badRequest().body(new AjaxResponse(e.getMessage(), "422", newResData));
         } catch (Exception e) {
-            System.out.println(format("Hi! I am error (%s)", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AjaxResponse(e.getMessage(), "500", newResData));
         }
-        return ResponseEntity.ok(newResData);
+        return ResponseEntity.ok(new AjaxResponse("", "200", newResData ));
     }
 }

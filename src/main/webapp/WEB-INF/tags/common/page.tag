@@ -19,25 +19,23 @@
                 enableAddButton(false);
                 event.preventDefault();
                 let $form = $(this).closest('form');
-                console.log($form.serialize());
                 let product = $(this).closest('tr').data('id');
-                console.log(product);
-                console.log("${home}" + "/" + product + "/addToCart");
 
                 $.ajax({
                     type : "POST",
                     url : "${home}" + "/cars/"  + product + "/addToCart",
                     data: $form.serialize(),
                     success : function(response) {
-                        console.log("SUCCESS: ", response);
-                        $('#count').text(response.count);
-                        $('#total').text(response.total);
+                        $('#count').text(response.data.count);
+                        $('#total').text(response.data.total);
                     },
                     error : function(e) {
-                        console.log("ERROR: ", e);
-                        $('#quantityError').text(e);
+                        if (e.responseJSON.code == "422") {
+                            $('[data-id=' + 's' + product + ']').text(e.responseJSON.msg);
+                        }
+
                     },
-                    done : function(e) {
+                    done : function() {
                         console.log("DONE");
                         enableAddButton(true);
                     }

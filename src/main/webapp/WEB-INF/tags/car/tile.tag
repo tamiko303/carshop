@@ -12,9 +12,9 @@
     <td><a href="${pdpLink}"><c:out value="${car.model}"/></a></td>
     <td><c:out value="${car.colors}"/></td>
     <td><c:out value="$ ${car.price}"/></td>
-    <td id="input">
+    <td class="input">
             <input form="${car.id}" type="number" name="quantity" min="1" required value="1">
-            <br/><span id="quantityError" style="color: red" ></span>
+            <br/><span data-id="s${car.id}" style="color: red" ></span>
 <%--            <input form="${car.id}" type="hidden" name="product" readonly value="${car.id}">--%>
     </td>
     <td>

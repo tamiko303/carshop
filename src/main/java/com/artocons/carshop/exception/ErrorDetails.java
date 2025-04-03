@@ -3,15 +3,13 @@ package com.artocons.carshop.exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class ErrorDetails {
-    private Date timestamp;
+    private HttpStatus statusCode;
     private String message;
     private String details;
-
 }

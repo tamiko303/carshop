@@ -1,6 +1,7 @@
 package com.artocons.carshop.service;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.ResultData;
 import com.artocons.carshop.validation.QuantityValidator;
@@ -33,11 +34,12 @@ public class CartService {
         return cart;
     }
 
-    public ResultData addItemToCart(Cart cartNew) throws ServiceException, ResourceNotFoundException {
+    public ResultData addItemToCart(Cart cartNew) throws ServiceException, ResourceNotFoundException, ResourceVaidationException {
 
-        try {
 
             quantityValidator.validate(cartNew);
+
+        try {
 
             List<Cart> cartOldItms = (List<Cart>) session.getAttribute("cart");
 
@@ -45,27 +47,27 @@ public class CartService {
                 List<Cart> newCart = new ArrayList<>();
                 newCart.add(cartNew);
                 session.setAttribute("cart", newCart);
-                return new ResultData(getCartCount(), getCartTotalCost());
-            }
+            } else {
 
-            boolean flag = false;
+                boolean flag = false;
 
-            ListIterator<Cart> iterator =  cartOldItms.listIterator();
-            while (iterator.hasNext()) {
-                Cart nextItem = iterator.next();
-                if (nextItem.getProduct().equals(cartNew.getProduct())) {
-                    cartNew.setQuantity(nextItem.getQuantity() + cartNew.getQuantity());
-                    iterator.set(cartNew);
-                    flag = true;
+                ListIterator<Cart> iterator = cartOldItms.listIterator();
+                while (iterator.hasNext()) {
+                    Cart nextItem = iterator.next();
+                    if (nextItem.getProduct().equals(cartNew.getProduct())) {
+                        cartNew.setQuantity(nextItem.getQuantity() + cartNew.getQuantity());
+                        iterator.set(cartNew);
+                        flag = true;
+                    }
                 }
-            }
 
-            if (!flag) {
-                cartOldItms.add(cartNew);
-            }
+                if (!flag) {
+                    cartOldItms.add(cartNew);
+                }
 
-            session.setAttribute("cart", cartOldItms);
+                session.setAttribute("cart", cartOldItms);
 //            cartRepository.save(cartNew);
+            }
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
