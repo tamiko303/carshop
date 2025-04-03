@@ -3,6 +3,8 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+  pagination:
+    cars-per-page: 5
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

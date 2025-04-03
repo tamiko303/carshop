@@ -1,11 +1,24 @@
 package com.artocons.carshop.persistence.model;
 
+import com.artocons.carshop.persistence.dtos.ProductDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "car")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Car {
 
     @Id
@@ -53,91 +66,30 @@ public class Car {
     @NotNull
     private String gearboxType;
 
-    public Long getId() {
-        return id;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "car_colors",
+            joinColumns = @JoinColumn(name = "car_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "color_id", referencedColumnName = "id")
+    )
+    private Set<Color> colors = new HashSet<>();
+
+    public static ProductDTO convertToProductDTO(Car car) {
+        return new ProductDTO(  car.model,
+                                car.brand,
+                                car.description,
+                                car.price,
+                                car.productionYear,
+                                car.mileage,
+                                car.bodyType,
+                                car.engineType,
+                                car.engineCapacity,
+                                car.gearboxType     );
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Long getProductionYear() {
-        return productionYear;
-    }
-
-    public void setProductionYear(Long productionYear) {
-        this.productionYear = productionYear;
-    }
-
-    public Long getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(Long mileage) {
-        this.mileage = mileage;
-    }
-
-    public String getBodyType() {
-        return bodyType;
-    }
-
-    public void setBodyType(String bodyType) {
-        this.bodyType = bodyType;
-    }
-
-    public String getEngineType() {
-        return engineType;
-    }
-
-    public void setEngineType(String engineType) {
-        this.engineType = engineType;
-    }
-
-    public String getEngineCapacity() {
-        return engineCapacity;
-    }
-
-    public void setEngineCapacity(String engineCapacity) {
-        this.engineCapacity = engineCapacity;
-    }
-
-    public String getGearboxType() {
-        return gearboxType;
-    }
-
-    public void setGearboxType(String gearboxType) {
-        this.gearboxType = gearboxType;
+    public String convertColorsToString(Set<Color> colors) {
+        return colors.stream()
+                     .map(Color::getName)
+                     .collect(Collectors.joining(" "));
     }
 }

@@ -19,3 +19,24 @@ create table stock (
     stock int not null,
     primary key (product_id)
 );
+
+create table color (
+    id bigint not null,
+    name varchar(255) not null,
+    primary key (id)
+);
+
+create table car_colors (
+    car_id bigint not null,
+    color_id bigint not null,
+    primary key (car_id, color_id)
+);
+
+create table cart (
+    id bigint not null,
+    product long not null,
+    quantity int not null,
+    date date not null,
+    description clob,
+    primary key (id, product)
+);
