@@ -20,7 +20,6 @@ public class CartService {
 
     private final HttpSession session;
     private final CarService carService;
-//    public final CartRepository cartRepository;
     private final QuantityValidator quantityValidator;
 
     public List<Cart> getCartList() {

@@ -12,18 +12,19 @@
                 <img src="<c:url value="https://raw.githubusercontent.com/Alex-Job/img/refs/heads/main/car.png"/>" width="100" height="100" alt="Car image">
                 <div><c:out value="${carItem.description}"/></div>
                 <br>
-                <table class="table center-block border border-success w-50 p-3 border-opacity-25" id="addToCart">
+                <table class="table center-block border w-75 p-3" id="addToCart">
                     <tbody>
                     <tr>
-                        <td>
-                            <b>Price: </b><c:out value="${carItem.price}"/>
-                        </td>
+                        <td> <b>Price: </b></td>
+                        <td><c:out value="${carItem.price}"/>
                     </tr>
                     <tr data-id="${carItem.id}" class="data-form" >
                         <td>
+                            <input form="${carItem.id}" type="number" name="quantity" min="1" required value="1">
+                            <br/><span data-id="s${carItem.id}" style="color: red" ></span>
+                        </td>
+                        <td>
                             <form id="${carItem.id}">
-                                <input form="${carItem.id}" type="number" name="quantity" min="1" required value="1">
-                                <br/><span data-id="s${carItem.id}" style="color: red" ></span>
                                 <button
                                         type="submit"
                                         class="btn btn-danger btn-sm">
