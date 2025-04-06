@@ -14,7 +14,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
-            $( "#addToCart button" ).click( function( event ) {
+            $( "#addToCart .btn-add" ).click( function( event ) {
                 // debugger;
                 enableAddButton(false);
                 event.preventDefault();

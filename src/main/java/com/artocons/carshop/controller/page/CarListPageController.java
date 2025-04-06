@@ -69,7 +69,7 @@ public class CarListPageController {
     }
 
     @PostMapping(path = "/{productId}/addToCart" )
-    public ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
+    private ResponseEntity<AjaxResponse> addToCart(@PathVariable(value = "productId") long productId,
                                                   @Valid @ModelAttribute AjaxRequest data ) throws ResourceNotFoundException, ResourceVaidationException {
 
         ResultData newResData = new ResultData();

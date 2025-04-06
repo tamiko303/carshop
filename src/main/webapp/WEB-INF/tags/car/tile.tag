@@ -21,7 +21,7 @@
         <form id="${car.id}">
             <button
                 type="submit"
-                class="btn btn-danger btn-sm">
+                class="btn btn-danger btn-sm btn-add">
                     Add to Cart
             </button>
         </form>
