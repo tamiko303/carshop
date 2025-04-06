@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-4 offset-10">
         <button type="button" class="btn btn-secondary btn-sm" >
-            My Cart: <b>${cartCount}</b> items <b>${cartTotalCost}</b>$
+            My Cart: <b><span id="count">${cartCount}</span></b> items <b><span id="total">${cartTotalCost}</span></b>$
         </button>
     </div>
 </div>

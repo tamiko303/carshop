@@ -23,8 +23,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
-    @Getter
     @Column(name = "product")
     @NotNull
     private Long product;
@@ -32,26 +30,20 @@ public class Cart {
 //    @Column(name = "user")
 //    private Long user;
 
-    @Setter
-    @Getter
     @Column(name = "quantity")
     @NotNull
     @Min(value = 1, message = "Quantity must be at least 1")
-    private Integer quantity;
+    private int quantity;
 
-    @Setter
-    @Getter
     @Column(name = "date")
     @NotNull
     private Date date;
 
-    @Setter
-    @Getter
     @Column(name = "description")
     @Lob
     private String description;
 
-    public <Cart> Cart(Long product, int quantity, String description) {
+    public Cart(Long product, int quantity, String description) {
 //        this.user = user;
         this.product = product;
         this.quantity = quantity;
@@ -59,9 +51,9 @@ public class Cart {
         this.description = description;
     }
 
-    public static CartDTO convertToCartDTO(Cart cart) {
-        return new CartDTO( cart.product,
-                            cart.quantity,
-                            cart.description );
-    }
+//    public static CartDTO convertToCartDTO(Cart cart) {
+//        return new CartDTO( cart.product,
+//                            cart.quantity,
+//                            cart.description );
+//    }
 }
