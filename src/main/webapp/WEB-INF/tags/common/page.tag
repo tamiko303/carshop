@@ -20,6 +20,7 @@
                 event.preventDefault();
                 let $form = $(this).closest('form');
                 let product = $(this).closest('tr').data('id');
+                $('[data-id=' + 's' + product + ']').text('');
 
                 $.ajax({
                     type : "POST",

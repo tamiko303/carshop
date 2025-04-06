@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
 
 import static com.artocons.carshop.util.CarShopConstants.PRODUCT_PATH;
@@ -27,7 +29,13 @@ public class CarDetailsPageController {
     private final CartService cartService;
 
     @GetMapping( "/{carId}")
-    public String getCarDetails(@PathVariable("carId") Long carId, Model model) throws ResourceNotFoundException {
+    public String getCarDetails(@PathVariable("carId") Long carId,
+                                HttpServletRequest request,
+                                Model model) throws ResourceNotFoundException {
+
+        HttpSession session = request.getSession();
+        String previousPage = request.getHeader("Referer");
+        session.setAttribute("previousPage", previousPage);
 
         try {
             Car carDetails = carService.getCarById(carId);
@@ -40,7 +48,17 @@ public class CarDetailsPageController {
         } catch (NoSuchElementException e){
             throw new ResourceNotFoundException(e.getMessage());
         }
-
         return CAR_DETAILS_PAGE;
+    }
+
+    @GetMapping("/goBack")
+    public String goBack(HttpSession session) {
+        String referer = (String) session.getAttribute("previousPage");
+
+        if (referer != null) {
+            return "redirect:" + referer;
+        } else {
+            return "redirect:/cars";
+        }
     }
 }
