@@ -1,22 +1,27 @@
 package com.artocons.carshop.util;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.persistence.dtos.CartDTO;
 import com.artocons.carshop.persistence.dtos.CartItemDTO;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MappingUtils {
 
-    private final CartService cartService;
+    private static CartService cartService;
     //entity -> dto
     public static CartItemDTO convertToCartItemDTO(Cart cart) {
         CartItemDTO dto = new CartItemDTO();
         dto.setProduct(cart.getProduct());
         dto.setQuantity(cart.getQuantity());
         dto.setDescription(cart.getDescription());
+//        cartService.addProductInfo((List<CartItemDTO>) dto);
 
         return dto;
     }

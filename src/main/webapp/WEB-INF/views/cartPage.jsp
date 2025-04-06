@@ -2,10 +2,11 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/cart" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<c:url var="orderLink" value="/order"/>
 
 <common:page pageTitle="Cart" showMenu="false" showSearch="false">
 
-    <div class="row justify-content-center">
+    <div class="row w-25 justify-content-lg-center">
         <h2>Cart</h2>
     </div>
     <div class="row mb-3">
@@ -27,7 +28,26 @@
         <c:forEach var="cart" items="${cart.content}">
             <cart:tile cart="${cart}"/>
         </c:forEach>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td>
+            <td class="row justify-content-center">
+                <button class="btn btn-light border-dark">
+                    Update
+                </button>
+            </td>
+            <td>
+                <form action="${orderLink}" method="get">
+<%--                    <input type="hidden" name="id" value="${cart.product}"/>--%>
+                    <button type="submit" class="btn btn-light border-dark">
+                        Order
+                    </button>
+                </form>
+            </td>
+        </tr>
         </tbody>
+
     </table>
+
+
 
 </common:page>
