@@ -2,8 +2,6 @@ package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.dtos.CartItemDTO;
-import com.artocons.carshop.persistence.model.Car;
-import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 import static com.artocons.carshop.util.CarShopConstants.*;
 
@@ -28,7 +25,7 @@ public class CartPageController {
     private final CartService cartService;
 
     @GetMapping
-    public String getAllItemsCart(HttpSession session, Model model) throws ResourceNotFoundException {
+    public String getAllItemsCart(Model model) throws ResourceNotFoundException {
         Page<CartItemDTO> cartItems = cartService.getCartPage(Pageable.unpaged());
 
         model.addAttribute(CART, cartItems);
@@ -38,11 +35,10 @@ public class CartPageController {
         return CART_PAGE;
     }
 
-    @GetMapping("/{productId}/remove")
-    private String removeProductFromCart(@PathVariable(value = "productId") long productId,
-                                  Model model) throws ResourceNotFoundException {
+    @PostMapping("/{productId}/remove")
+    private String removeProductFromCart(@PathVariable(value = "productId") long productId) throws ResourceNotFoundException {
 
-
+        cartService.removeProductFromCart(productId);
 
         return "redirect:/cart";
     }

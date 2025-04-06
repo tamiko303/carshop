@@ -32,7 +32,7 @@ public class CartService {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
 
         List<CartItemDTO> cartItems = cart.stream()
-                .map(i -> MappingUtils.convertToCartItemDTO(i))
+                .map(MappingUtils::convertToCartItemDTO)
                 .collect(Collectors.toList());
 
         addProductInfo(cartItems);
@@ -117,7 +117,7 @@ public class CartService {
         return totalCost;
     }
 
-    public void addProductInfo(List<CartItemDTO> list) throws ResourceNotFoundException {
+    private void addProductInfo(List<CartItemDTO> list) throws ResourceNotFoundException {
 
         list.forEach(cartItemDto -> {
             try {
@@ -133,4 +133,18 @@ public class CartService {
             }
         );
     }
+
+    public void removeProductFromCart(Long product) throws ResourceNotFoundException {
+        List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+
+        Optional<Cart> targetElement = null;
+        if (!CollectionUtils.isEmpty(cart)) {
+            targetElement = cart.stream()
+                    .filter(i -> Objects.equals(i.getProduct(), product))
+                    .findFirst();
+        }
+
+        targetElement.ifPresent(i -> cart.remove(i));
+    }
+
 }

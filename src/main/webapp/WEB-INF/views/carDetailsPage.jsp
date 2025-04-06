@@ -8,7 +8,7 @@
                 <div class="row mb-3">
                     <common:back/>
                 </div>
-                <h2><c:out value="${carItem.brand}"/></h2>
+                <h4><c:out value="${carItem.brand}"/></h4>
                 <img src="<c:url value="https://raw.githubusercontent.com/Alex-Job/img/refs/heads/main/car.png"/>" width="100" height="100" alt="Car image">
                 <div><c:out value="${carItem.description}"/></div>
                 <br>

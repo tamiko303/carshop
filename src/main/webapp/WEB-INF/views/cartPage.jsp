@@ -25,29 +25,25 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="cart" items="${cart.content}">
-            <cart:tile cart="${cart}"/>
-        </c:forEach>
-        <tr>
-            <td></td><td></td><td></td><td></td><td></td>
-            <td class="row justify-content-center">
-                <button class="btn btn-light border-dark">
-                    Update
-                </button>
-            </td>
-            <td>
-                <form action="${orderLink}" method="get">
-<%--                    <input type="hidden" name="id" value="${cart.product}"/>--%>
-                    <button type="submit" class="btn btn-light border-dark">
-                        Order
+            <c:forEach var="cart" items="${cart.content}">
+                <cart:tile cart="${cart}"/>
+            </c:forEach>
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td>
+                <td class="row justify-content-center">
+                    <button class="btn btn-light border-dark">
+                        Update
                     </button>
-                </form>
-            </td>
-        </tr>
+                </td>
+                <td>
+                    <form action="${orderLink}" method="get">
+                        <input type="hidden" name="cart" value="${cart}"/>
+                        <button type="submit" class="btn btn-light border-dark">
+                            Order
+                        </button>
+                    </form>
+                </td>
+            </tr>
         </tbody>
-
     </table>
-
-
-
 </common:page>
