@@ -6,6 +6,7 @@ import com.artocons.carshop.persistence.dtos.CartItemDTO;
 import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.ResultData;
+import com.artocons.carshop.util.CarShopHelper;
 import com.artocons.carshop.util.MappingUtils;
 import com.artocons.carshop.validation.QuantityValidator;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,12 @@ public class CartService {
 
     public ResultData addItemToCart(Cart cartNew) throws ServiceException, ResourceNotFoundException, ResourceVaidationException {
 
-            quantityValidator.validate(cartNew);
+        CarShopHelper helper = new CarShopHelper(session);
+        int qtyOld = helper.getQuantityCartItemByProductId(cartNew.getProduct());
+        int qtyNew = cartNew.getQuantity();
+        cartNew.setQuantity(qtyOld + qtyNew);
+
+        quantityValidator.validate(cartNew);
 
         try {
 
@@ -72,7 +78,7 @@ public class CartService {
                 while (iterator.hasNext()) {
                     Cart nextItem = iterator.next();
                     if (nextItem.getProduct().equals(cartNew.getProduct())) {
-                        cartNew.setQuantity(nextItem.getQuantity() + cartNew.getQuantity());
+                        cartNew.setQuantity(cartNew.getQuantity());     //nextItem.getQuantity() +
                         iterator.set(cartNew);
                         flag = true;
                     }
@@ -81,7 +87,6 @@ public class CartService {
                 if (!flag) {
                     cartOldItms.add(cartNew);
                 }
-
                 session.setAttribute("cart", cartOldItms);
 //            cartRepository.save(cartNew);
             }
@@ -129,21 +134,19 @@ public class CartService {
                 cartItemDto.setPrice(product.getPrice());
                 cartItemDto.setColors(product.getColors());
 
-                } catch (ResourceNotFoundException e) { }
+                } catch (ResourceNotFoundException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
             }
         );
     }
 
     public void removeProductFromCart(Long product) throws ResourceNotFoundException {
+
+        CarShopHelper helper = new CarShopHelper(session);
+        Optional<Cart> targetElement = helper.getCartItemByProductId(product);
+
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
-
-        Optional<Cart> targetElement = null;
-        if (!CollectionUtils.isEmpty(cart)) {
-            targetElement = cart.stream()
-                    .filter(i -> Objects.equals(i.getProduct(), product))
-                    .findFirst();
-        }
-
         targetElement.ifPresent(i -> cart.remove(i));
     }
 

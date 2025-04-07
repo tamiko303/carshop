@@ -21,24 +21,29 @@
                 let $form = $(this).closest('form');
                 let product = $(this).closest('tr').data('id');
                 $('[data-id=' + 's' + product + ']').text('');
+                let qty = 1;
 
-                $.ajax({
-                    type : "POST",
-                    url : "${home}" + "/cars/"  + product + "/addToCart",
-                    data: $form.serialize(),
-                    success : function(response) {
-                        $('#count').text(response.data.count);
-                        $('#total').text(response.data.total);
-                    },
-                    error : function(e) {
-                        if (e.responseJSON.code == "422") {
-                            $('[data-id=' + 's' + product + ']').text(e.responseJSON.msg);
-                        }
+                addToCart(product, qty, $form.serialize());
+                location.reload(true);
+            });
+        });
 
-                    },
-                    done : function() {
-                        console.log("DONE");
-                        enableAddButton(true);
+        $(document).ready(function() {
+            $( "#updateCart .btn-upd" ).click( function( event ) {
+                enableAddButton(false);
+                event.preventDefault();
+
+                $('#updateCart tbody tr.data-form ').each(function() {
+                    // debugger;
+                    let product = $(this).closest('tr').data('id');
+                    $('[data-id=' + 's' + product + ']').text('');
+                    let quantity = $(this).closest('tr').find('input.qty').val();
+                    let qtyOld = $(this).closest('tr').data('qty');
+                    let qty = +quantity - qtyOld;
+
+                    if (qty != 0) {
+                        addToCart(product, +quantity ,$.param({ quantity: qty }) );
+                        location.reload(true);
                     }
                 });
             });
@@ -46,6 +51,29 @@
 
         function enableAddButton(flag) {
             $("#btn-add").prop("disabled", flag);
+        }
+
+        function addToCart(product, qty, form) {
+            $.ajax({
+                type : "POST",
+                url : "${home}" + "/cars/"  + product + "/addToCart",
+                data: form,
+                success : function(response) {
+                    $('#count').text(response.data.count);
+                    $('#total').text(response.data.total);
+                    $('[data-qty=' + '0' + product + ']').text(qty);
+                },
+                error : function(e) {
+                    if (e.responseJSON.code == "422") {
+                        $('[data-id=' + 's' + product + ']').text(e.responseJSON.msg);
+                    }
+
+                },
+                done : function() {
+                    console.log("DONE");
+                    enableAddButton(true);
+                }
+            });
         }
 
     </script>

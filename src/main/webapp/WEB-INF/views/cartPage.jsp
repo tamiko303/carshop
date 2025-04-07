@@ -12,7 +12,7 @@
     <div class="row mb-3">
         <common:back/>
     </div>
-    <table class="table table-striped" id="addToCart">
+    <table class="table table-striped" id="updateCart">
         <thead>
         <tr>
             <th scope="col">Brand </th>
@@ -31,9 +31,11 @@
             <tr>
                 <td></td><td></td><td></td><td></td><td></td>
                 <td class="row justify-content-center">
-                    <button class="btn btn-light border-dark">
-                        Update
-                    </button>
+                    <form>
+                        <button  type="submit" class="btn btn-light btn-upd border-dark">
+                            Update
+                        </button>
+                    </form>
                 </td>
                 <td>
                     <form action="${orderLink}" method="get">
