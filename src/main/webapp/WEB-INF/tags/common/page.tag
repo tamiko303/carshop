@@ -15,7 +15,7 @@
     <script>
         $(document).ready(function() {
             $( "#addToCart .btn-add" ).click( function( event ) {
-                // debugger;
+                debugger;
                 enableAddButton(false);
                 event.preventDefault();
                 let $form = $(this).closest('form');
@@ -24,7 +24,6 @@
                 let qty = 1;
 
                 addToCart(product, qty, $form.serialize());
-                location.reload(true);
             });
         });
 
@@ -42,8 +41,7 @@
                     let qty = +quantity - qtyOld;
 
                     if (qty != 0) {
-                        addToCart(product, +quantity ,$.param({ quantity: qty }) );
-                        location.reload(true);
+                        addToCart(product, +quantity ,$.param({ quantity: qty }) )
                     }
                 });
             });
@@ -61,7 +59,7 @@
                 success : function(response) {
                     $('#count').text(response.data.count);
                     $('#total').text(response.data.total);
-                    $('[data-qty=' + '0' + product + ']').text(qty);
+                    $('[data-id=' + product + ']').data('qty', qty);
                 },
                 error : function(e) {
                     if (e.responseJSON.code == "422") {

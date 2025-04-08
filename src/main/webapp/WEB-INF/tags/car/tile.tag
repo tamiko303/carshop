@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ attribute name="car" required="true" type="com.artocons.carshop.persistence.model.Car" %>
 <c:url var="pdpLink" value="/product/${car.id}"/>
-<tr data-id="${car.id}" class="data-form" data-qty="01">
+<tr data-id="${car.id}" class="data-form" data-qty="1">
     <td>
         <a href="${pdpLink}">
             <img src="<c:url value="https://raw.githubusercontent.com/Alex-Job/img/refs/heads/main/car.png"/>" width="100" height="100" alt="Car image">

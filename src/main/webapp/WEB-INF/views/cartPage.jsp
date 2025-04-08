@@ -10,7 +10,7 @@
         <h2>Cart</h2>
     </div>
     <div class="row mb-3">
-        <common:back/>
+        <common:back url="/product/goBack" title="Back to product list"/>
     </div>
     <table class="table table-striped" id="updateCart">
         <thead>

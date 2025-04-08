@@ -40,3 +40,22 @@ create table cart (
     description clob,
     primary key (id, product)
 );
+
+create table orderItem (
+   order_id bigint not null,
+   product long not null,
+   quantity int not null,
+   primary key (order_id, product)
+);
+
+-- create table order (
+--   id bigint not null,
+--   subtotal decimal(19,2),
+--   delivery decimal(19,2),
+--   name string,
+--   suname string,
+--   adress string,
+--   phone string,
+-- --   description string,
+--   primary key (id)
+-- );

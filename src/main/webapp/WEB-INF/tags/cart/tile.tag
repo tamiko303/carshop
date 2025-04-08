@@ -5,7 +5,7 @@
 <c:url var="pdpLink" value="/product/${cart.product}"/>
 <c:url var="removeLink" value="/cart/${cart.product}/remove"/>
 
-<tr data-id="${cart.product}" data-qty="0${cart.quantity}" class="data-form" >
+<tr data-id="${cart.product}" data-qty="${cart.quantity}" class="data-form" >
     <td><c:out value="${cart.brand}"/></td>
     <td><a href="${pdpLink}"><c:out value="${cart.model}"/></a></td>
     <td><c:out value="${cart.productionYear}"/></td>
