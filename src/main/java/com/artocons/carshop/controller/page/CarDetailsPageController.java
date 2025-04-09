@@ -55,10 +55,6 @@ public class CarDetailsPageController {
     public String goBack(HttpSession session) {
         String referer = (String) session.getAttribute("previousPage");
 
-        if (referer != null) {
-            return "redirect:" + referer;
-        } else {
-            return "redirect:/cars";
-        }
+        return (referer != null) ? "redirect:" + referer : "redirect:/cars";
     }
 }

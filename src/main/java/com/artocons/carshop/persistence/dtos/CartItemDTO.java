@@ -1,19 +1,13 @@
 package com.artocons.carshop.persistence.dtos;
 
 import com.artocons.carshop.persistence.model.Color;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class CartItemDTO {
 
     private Long product;

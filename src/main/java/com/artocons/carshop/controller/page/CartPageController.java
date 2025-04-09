@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-
 import static com.artocons.carshop.util.CarShopConstants.*;
 
 @Controller
@@ -36,7 +34,7 @@ public class CartPageController {
     }
 
     @PostMapping("/{productId}/remove")
-    private String removeProductFromCart(@PathVariable(value = "productId") long productId) throws ResourceNotFoundException {
+    public String removeProductFromCart(@PathVariable(value = "productId") long productId) throws ResourceNotFoundException {
 
         cartService.removeProductFromCart(productId);
 
