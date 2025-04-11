@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<common:page pageTitle="Car details" showMenu="false" showSearch="false">
+<common:page pageTitle="Car details" showMenu="false" showSearch="false" showCart="true">
     <div class="container">
         <div class="row align-items-start">
             <div class="col">

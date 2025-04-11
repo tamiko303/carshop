@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:url var="orderLink" value="/order"/>
 
-<common:page pageTitle="Cart" showMenu="false" showSearch="false">
+<common:page pageTitle="Cart" showMenu="false" showSearch="false"  showCart="true">
 
     <div class="row w-25 justify-content-lg-center">
         <h2>Cart</h2>
@@ -39,7 +39,7 @@
                 </td>
                 <td>
                     <form action="${orderLink}" method="get">
-                        <input type="hidden" name="cart" value="${cart}"/>
+<%--                        <input type="hidden" name="cart" value="${cart}"/>--%>
                         <button type="submit" class="btn btn-light border-dark">
                             Order
                         </button>

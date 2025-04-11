@@ -3,6 +3,7 @@
 <%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
 <%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="showSearch" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="showCart" required="true" type="java.lang.Boolean" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,7 +90,9 @@
         <c:if test="${showMenu}">
             <common:menu/>
         </c:if>
-        <common:myCart/>
+        <c:if test="${showCart}">
+            <common:myCart/>
+        </c:if>
         <c:if test="${showSearch}">
             <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
         </c:if>

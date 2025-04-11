@@ -3,7 +3,7 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/order" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<common:page pageTitle="order" showMenu="false" showSearch="false">
+<common:page pageTitle="order" showMenu="false" showSearch="false" showCart="false">
     <div class="row w-25 justify-content-lg-center">
         <h2>Order</h2>
     </div>
@@ -27,22 +27,24 @@
             </c:forEach>
             <tr>
                 <td></td><td></td><td></td><td></td>
-                <td>SubTotal</td>
-                <td>${subTotal}</td>
+                <td><strong>SubTotal</strong></td>
+                <td><strong>${subTotal}</strong></td>
             </tr>
             <tr>
                 <td></td><td></td><td></td><td></td>
-                <td>Delivery</td>
-                <td>${delivery}</td>
+                <td><strong>Delivery</strong></td>
+                <td><strong>${delivery}</strong></td>
             </tr>
             <tr>
                 <td></td><td></td><td></td><td></td>
-                <td>Total</td>
-                <td>${total}</td>
+                <td><strong>Total</strong></td>
+                <td><strong>${total}</strong></td>
             </tr>
         </tbody>
     </table>
-    <div class="row mb-3">
-        <common:back url="/order/goBack" title="Back to cart"/>
+    <div class="container w-30">
+        <div class="row px-4">
+            <order:form />
+        </div>
     </div>
 </common:page>
