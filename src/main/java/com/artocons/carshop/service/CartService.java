@@ -30,13 +30,15 @@ public class CartService {
     private final QuantityValidator quantityValidator;
 
     public PageImpl<CartItemDTO> getCartPage(Pageable pageable ) throws ResourceNotFoundException {
-        List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+        List<Cart> carts = (List<Cart>) session.getAttribute("cart");
 
-        List<CartItemDTO> cartItems = cart.stream()
-                .map(MappingUtils::convertToCartItemDTO)
-                .collect(Collectors.toList());
-
-        addProductInfo(cartItems);
+        List<CartItemDTO> cartItems = new ArrayList<>();
+        carts.forEach(cartItem -> {
+                    Car product = carService.getCarByIdOrNull(cartItem.getProduct());
+                    if(product != null) {
+                        cartItems.add(MappingUtils.convertToCartItemDTO(product, cartItem));
+                    }
+                });
 
 //        cartRepository.findAll(pageable)
         return new PageImpl<>(cartItems, pageable, cartItems.size());
@@ -122,24 +124,20 @@ public class CartService {
         return totalCost;
     }
 
-    private void addProductInfo(List<CartItemDTO> list) throws ResourceNotFoundException {
-
-        list.forEach(cartItemDto -> {
-            try {
-                Car product = carService.getCarById(cartItemDto.getProduct());
-
-                cartItemDto.setBrand(product.getBrand());
-                cartItemDto.setModel(product.getModel());
-                cartItemDto.setProductionYear(product.getProductionYear());
-                cartItemDto.setPrice(product.getPrice());
-                cartItemDto.setColors(product.getColors());
-
-                } catch (ResourceNotFoundException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            }
-        );
-    }
+//    private void addProductInfo(List<CartItemDTO> list) throws ResourceNotFoundException {
+//
+//        list.forEach(cartItemDto -> {
+//            try {
+//                Car product = carService.getCarById(cartItemDto.getProduct());
+//
+//                cartItemDto = MappingUtils.convertToCartItemDTO(product, cartItemDto);
+//
+//                } catch (ResourceNotFoundException e) {
+//                    throw new RuntimeException(e.getMessage());
+//                }
+//            }
+//        );
+//    }
 
     public void removeProductFromCart(Long product) throws ResourceNotFoundException {
 

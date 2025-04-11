@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 public class CartItemDTO {
 
     private Long product;

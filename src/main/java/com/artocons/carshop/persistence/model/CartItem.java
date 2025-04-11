@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class CartItem {
     @Id
