@@ -67,4 +67,7 @@ public class CarService{
                             .orElseThrow(() -> new ResourceNotFoundException("Product not found for id :: " + productId));
     }
 
+    public Car getCarByIdOrNull(long productId) {
+        return carRepository.findById(productId).orElse(null);
+    }
 }
