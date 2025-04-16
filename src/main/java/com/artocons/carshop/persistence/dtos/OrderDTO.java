@@ -12,8 +12,8 @@ public class OrderDTO {
     private BigDecimal subTotal;
     private BigDecimal delivery;
 
-    private String name;
-    private String suname;
+    private String firstName;
+    private String lastName;
     private String adress;
     private String phone;
     private String description;

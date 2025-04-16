@@ -5,6 +5,8 @@ spring:
       suffix: .jsp
   pagination:
     cars-per-page: 5
+  delivery:
+    price: 500.00
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

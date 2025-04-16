@@ -1,18 +1,15 @@
 package com.artocons.carshop.persistence.model;
 
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
-@Getter
 @Setter
-@Entity
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class OrderItem {
 
     @Id
@@ -23,11 +20,11 @@ public class OrderItem {
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "orderId")
-    private Order order;
+    @JoinColumn(name = "order_id")
+    private OrderHeader order;
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Car product;
 
     public OrderItem(Car product, int quantity) {

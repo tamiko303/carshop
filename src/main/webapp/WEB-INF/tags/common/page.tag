@@ -75,6 +75,11 @@
             });
         }
 
+        function validateOrderData() {
+            debugger;
+            let $form = $(this).closest('order');
+        }
+
     </script>
 
     <meta charset="utf-8">

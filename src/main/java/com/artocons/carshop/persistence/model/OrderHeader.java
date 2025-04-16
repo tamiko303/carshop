@@ -1,31 +1,31 @@
 package com.artocons.carshop.persistence.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Setter
-@Table(name = "order")
+@Getter
+@ToString
+@Table(name = "order_header")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Order {
+public class OrderHeader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "order_id", updatable = false, nullable = false)
+    private Long orderId;
     private BigDecimal subTotal;
     private BigDecimal delivery;
+    private BigDecimal total;
 
-    private String name;
-    private String suname;
+    private String firstName;
+    private String lastName;
     private String adress;
     private String phone;
     private String description;

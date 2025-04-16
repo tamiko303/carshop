@@ -41,21 +41,23 @@ create table cart (
     primary key (id, product)
 );
 
-create table orderItem (
+create table order_item (
+   id bigint not null,
    order_id bigint not null,
-   product long not null,
+   product_id long not null,
    quantity int not null,
-   primary key (order_id, product)
+   primary key (order_id, product_id)
 );
 
--- create table order (
---   id bigint not null,
---   subtotal decimal(19,2),
---   delivery decimal(19,2),
---   name string,
---   suname string,
---   adress string,
---   phone string,
--- --   description string,
---   primary key (id)
--- );
+create table order_header (
+  order_id bigint not null AUTO_INCREMENT,
+  sub_total decimal(19,2),
+  delivery decimal(19,2),
+  total decimal(19,2),
+  first_name varchar(255),
+  last_name varchar(255),
+  adress varchar(255),
+  phone varchar(255),
+  description clob,
+  primary key (order_id)
+);

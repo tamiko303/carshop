@@ -43,8 +43,8 @@
         </tbody>
     </table>
     <div class="container w-30">
-        <div class="row px-4">
-            <order:form />
+        <div class="row px-4
+            <order:form/>
         </div>
     </div>
 </common:page>
