@@ -74,6 +74,9 @@ public class Car {
     )
     private Set<Color> colors = new HashSet<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderItem> orderItems = new HashSet<>();
+
     public static ProductDTO convertToProductDTO(Car car) {
         return new ProductDTO(  car.model,
                                 car.brand,

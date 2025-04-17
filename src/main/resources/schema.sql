@@ -41,14 +41,6 @@ create table cart (
     primary key (id, product)
 );
 
-create table order_item (
-   id bigint not null,
-   order_id bigint not null,
-   product_id long not null,
-   quantity int not null,
-   primary key (order_id, product_id)
-);
-
 create table order_header (
   order_id bigint not null AUTO_INCREMENT,
   sub_total decimal(19,2),

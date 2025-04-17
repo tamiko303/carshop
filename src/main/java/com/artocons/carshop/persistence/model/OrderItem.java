@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @ToString
+@Table(name = "order_items")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -31,5 +32,4 @@ public class OrderItem {
         this.product = product;
         this.quantity = quantity;
     }
-
 }

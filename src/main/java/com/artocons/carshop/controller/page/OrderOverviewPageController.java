@@ -18,6 +18,7 @@ public class OrderOverviewPageController {
 
     private static final String OVERVIEW_PAGE = "overviewPage";
     private static final String ORDER = "order";
+    private static final String ORDER_ID = "orderId";
 
     private final OrderOverviewService orderOverviewService;
 
@@ -27,7 +28,18 @@ public class OrderOverviewPageController {
 
         OrderHeader order = orderOverviewService.getOrderByIdOrNull(orderId);
 
-        model.addAttribute(ORDER, order);
+        model.addAttribute(ORDER, order.getOrderItems());
+        model.addAttribute(ORDER_ID, orderId);
+
+        model.addAttribute("subTotal", order.getSubTotal());
+        model.addAttribute("delivery", order.getDelivery());
+        model.addAttribute("total", order.getTotal());
+
+        model.addAttribute("userName", order.getFirstName());
+        model.addAttribute("userSuName", order.getLastName());
+        model.addAttribute("userAdress", order.getAdress());
+        model.addAttribute("userPhone", order.getPhone());
+        model.addAttribute("userDescription", order.getDescription());
 
         return OVERVIEW_PAGE;
     }
