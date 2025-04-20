@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function() {
             $( "#addToCart .btn-add" ).click( function( event ) {
-                debugger;
+                // debugger;
                 enableAddButton(false);
                 event.preventDefault();
                 let $form = $(this).closest('form');
@@ -45,6 +45,26 @@
                         addToCart(product, +quantity ,$.param({ quantity: qty }) )
                     }
                 });
+            });
+        });
+
+        $(document).ready(function() {
+            debugger;
+            $( "#btn-user_data" ).click( function( event ) {
+                let $forms = $(this).closest('form.needs-validation');
+
+                Array.prototype.slice.call($forms)
+                    .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault()
+                                event.stopPropagation()
+                            }
+
+                            form.classList.add('was-validated')
+                        }, false)
+                    })
+
             });
         });
 

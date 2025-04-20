@@ -51,14 +51,20 @@ public class OrderService {
 
         OrderHeader saveOrder = orderRepository.save(order);
         cartService.clearCart();
-        stockService.decreateStock(orderItems);
 
         return saveOrder;
     }
 
     private List<OrderItem> createOrderItems(OrderHeader order) {
         List<OrderItem> orderItems = formOrderItemsFromCart();
-        orderItems.forEach(orderItem -> orderItem.setOrder(order));
+        orderItems.forEach(orderItem -> {
+            orderItem.setOrder(order);
+            try {
+                stockService.reserveStock(orderItem.getProduct().getId(), orderItem.getQuantity());
+            } catch (ResourceNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
         return orderItems;
     }
 

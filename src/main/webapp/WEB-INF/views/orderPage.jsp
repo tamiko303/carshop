@@ -22,8 +22,8 @@
             </tr>
         </thead>
         <tbody>
-            <c:forEach var="order" items="${order.content}">
-                <order:tile order="${order}"/>
+            <c:forEach var="orderi" items="${order.content}">
+                <order:tile orderi="${orderi}"/>
             </c:forEach>
             <tr>
                 <td></td><td></td><td></td><td></td>

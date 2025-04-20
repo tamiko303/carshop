@@ -4,8 +4,8 @@ import com.artocons.carshop.persistence.dtos.OrderItemDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +16,5 @@ public class OrderRequest {
     private String phone;
     private String description;
 
-    private Set<OrderItem> data = new HashSet<>();
+    private List<OrderItem> data = new ArrayList<>();
 }

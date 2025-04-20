@@ -23,7 +23,7 @@
         </thead>
         <tbody>
             <c:forEach var="order" items="${order}">
-                <order:tile order="${order}"/>
+                <order:tile orderi="${order}"/>
             </c:forEach>
             <tr>
                 <td></td><td></td><td></td><td></td>
