@@ -1,6 +1,7 @@
 package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.persistence.model.OrderRequest;
@@ -73,10 +74,11 @@ public class OrderPageController {
     }
 
     @PostMapping("/placeOrder")
-    public String placeOrder(@Valid @ModelAttribute OrderRequest orderData) throws ResourceNotFoundException {
+    public String placeOrder(@Valid @ModelAttribute OrderRequest orderData) throws ResourceNotFoundException, ResourceVaidationException {
 
         OrderHeader savedOrder = orderService.placeOrder(orderData);
 
         return "redirect:/order-overview/" + savedOrder.getOrderId();
     }
 }
+

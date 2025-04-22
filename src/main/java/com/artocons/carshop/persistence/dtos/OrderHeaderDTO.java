@@ -1,16 +1,19 @@
 package com.artocons.carshop.persistence.dtos;
 
+import com.artocons.carshop.persistence.model.OrderItem;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-public class OrderDTO {
+public class OrderHeaderDTO {
 
-    private Long id;
+    private Long orderId;
     private BigDecimal subTotal;
     private BigDecimal delivery;
+    private BigDecimal total;
 
     private String firstName;
     private String lastName;
@@ -18,5 +21,7 @@ public class OrderDTO {
     private String phone;
     private String description;
 
-    private List<OrderItemDTO> items;
+    private String message;
+
+    private Set<OrderItem> items = new HashSet<>();
 }

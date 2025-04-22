@@ -5,7 +5,12 @@
 
 <common:page pageTitle="order" showMenu="false" showSearch="false" showCart="false">
     <div class="row w-25 justify-content-lg-center">
-        <h4>Thank you for your order</h4>
+        <h4>Thank you for your order.</h4>
+        <c:if test="${showMsg}">
+            <h5 class="text-danger">
+                Please note!!! For products with ID ${message} the quantity has been adjusted in accordance with stocks!!
+            </h5>
+        </c:if>
     </div>
     <div class="row w-25 justify-content-lg-center">
         <h4>Order number: "${orderId}"</h4>

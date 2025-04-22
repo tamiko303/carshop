@@ -1,11 +1,10 @@
 package com.artocons.carshop.util;
 
 import com.artocons.carshop.persistence.dtos.CartItemDTO;
-import com.artocons.carshop.persistence.model.Car;
-import com.artocons.carshop.persistence.dtos.OrderDTO;
+import com.artocons.carshop.persistence.dtos.OrderHeaderDTO;
 import com.artocons.carshop.persistence.dtos.OrderItemDTO;
 import com.artocons.carshop.persistence.model.Cart;
-import com.artocons.carshop.persistence.model.Order;
+import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +37,25 @@ public class MappingUtils {
         return dto;
     }
 
-    public static OrderDTO convertToOrderDTO(Order order) {
-        OrderDTO dto = new OrderDTO();
-        dto.setId(order.getId());
+    public static OrderHeaderDTO convertToOrderHeaderDTO(OrderHeader order, String message) {
+        OrderHeaderDTO dto = new OrderHeaderDTO();
+        dto.setOrderId(order.getOrderId());
+        dto.setSubTotal(order.getSubTotal());
+        dto.setDelivery(order.getDelivery());
+        dto.setTotal(order.getTotal());
+
+        dto.setFirstName(order.getFirstName());
+        dto.setLastName(order.getLastName());
+        dto.setAdress(order.getAdress());
+        dto.setPhone(order.getPhone());
+        dto.setDescription(order.getDescription());
+
+        dto.setMessage(message);
+
+        dto.setItems(order.getOrderItems());
 
         return dto;
+    }
 
     //dto -> entity
     public static Cart convertToCartItemEntity(CartItemDTO cartItemDTO) {

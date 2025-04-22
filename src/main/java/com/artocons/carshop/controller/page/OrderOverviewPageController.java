@@ -27,9 +27,13 @@ public class OrderOverviewPageController {
                                Model model){
 
         OrderHeader order = orderOverviewService.getOrderByIdOrNull(orderId);
+        String message = orderOverviewService.getMessage();
 
         model.addAttribute(ORDER, order.getOrderItems());
         model.addAttribute(ORDER_ID, orderId);
+
+        model.addAttribute("showMsg", !message.isEmpty());
+        model.addAttribute("message", message);
 
         model.addAttribute("subTotal", order.getSubTotal());
         model.addAttribute("delivery", order.getDelivery());
