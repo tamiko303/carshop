@@ -2,17 +2,24 @@ package com.artocons.carshop.service;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
+import com.artocons.carshop.persistence.dtos.CartItemDTO;
+import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.ResultData;
+import com.artocons.carshop.util.CarShopHelper;
+import com.artocons.carshop.util.MappingUtils;
 import com.artocons.carshop.validation.QuantityValidator;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +27,22 @@ public class CartService {
 
     private final HttpSession session;
     private final CarService carService;
-//    public final CartRepository cartRepository;
     private final QuantityValidator quantityValidator;
+
+    public PageImpl<CartItemDTO> getCartPage(Pageable pageable ) throws ResourceNotFoundException {
+        List<Cart> carts = (List<Cart>) session.getAttribute("cart");
+
+        List<CartItemDTO> cartItems = new ArrayList<>();
+        carts.forEach(cartItem -> {
+                    Car product = carService.getCarByIdOrNull(cartItem.getProduct());
+                    if(product != null) {
+                        cartItems.add(MappingUtils.convertToCartItemDTO(product, cartItem));
+                    }
+                });
+
+//        cartRepository.findAll(pageable)
+        return new PageImpl<>(cartItems, pageable, cartItems.size());
+    }
 
     public List<Cart> getCartList() {
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
@@ -36,8 +57,12 @@ public class CartService {
 
     public ResultData addItemToCart(Cart cartNew) throws ServiceException, ResourceNotFoundException, ResourceVaidationException {
 
+        CarShopHelper helper = new CarShopHelper(session);
+        int qtyOld = helper.getQuantityCartItemByProductId(cartNew.getProduct());
+        int qtyNew = cartNew.getQuantity();
+        cartNew.setQuantity(qtyOld + qtyNew);
 
-            quantityValidator.validate(cartNew);
+        quantityValidator.validate(cartNew);
 
         try {
 
@@ -55,7 +80,7 @@ public class CartService {
                 while (iterator.hasNext()) {
                     Cart nextItem = iterator.next();
                     if (nextItem.getProduct().equals(cartNew.getProduct())) {
-                        cartNew.setQuantity(nextItem.getQuantity() + cartNew.getQuantity());
+                        cartNew.setQuantity(cartNew.getQuantity());     //nextItem.getQuantity() +
                         iterator.set(cartNew);
                         flag = true;
                     }
@@ -64,7 +89,6 @@ public class CartService {
                 if (!flag) {
                     cartOldItms.add(cartNew);
                 }
-
                 session.setAttribute("cart", cartOldItms);
 //            cartRepository.save(cartNew);
             }
@@ -99,4 +123,29 @@ public class CartService {
         }
         return totalCost;
     }
+
+//    private void addProductInfo(List<CartItemDTO> list) throws ResourceNotFoundException {
+//
+//        list.forEach(cartItemDto -> {
+//            try {
+//                Car product = carService.getCarById(cartItemDto.getProduct());
+//
+//                cartItemDto = MappingUtils.convertToCartItemDTO(product, cartItemDto);
+//
+//                } catch (ResourceNotFoundException e) {
+//                    throw new RuntimeException(e.getMessage());
+//                }
+//            }
+//        );
+//    }
+
+    public void removeProductFromCart(Long product) throws ResourceNotFoundException {
+
+        CarShopHelper helper = new CarShopHelper(session);
+        Optional<Cart> targetElement = helper.getCartItemByProductId(product);
+
+        List<Cart> cart = (List<Cart>) session.getAttribute("cart");
+        targetElement.ifPresent(i -> cart.remove(i));
+    }
+
 }

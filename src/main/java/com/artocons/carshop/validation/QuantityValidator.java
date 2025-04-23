@@ -7,19 +7,20 @@ import com.artocons.carshop.persistence.model.Stock;
 import com.artocons.carshop.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Component
 @RequiredArgsConstructor
 public class QuantityValidator  {
+
     private final StockService stockService;
-    private final InternalResourceViewResolver internalResourceViewResolver;
 
     public void validate(Cart cart) throws ResourceNotFoundException, ResourceVaidationException {
 
         Stock stock = stockService.getStocksByCarId(cart.getProduct());
 
-        if (cart.getQuantity() > stock.getStock()) {
+        int newQuantity = cart.getQuantity();
+
+        if (newQuantity > stock.getStock()) {
             throw new ResourceVaidationException("The required quantity is not available!");
         }
     }
