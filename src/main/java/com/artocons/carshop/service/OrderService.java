@@ -59,6 +59,7 @@ public class OrderService {
 
         OrderHeader saveOrder = orderRepository.save(order);
         cartService.clearCart();
+        session.setAttribute("order", saveOrder);
 
         String message = validOrderItems.getMessage();
         session.setAttribute("orderMessage", message);
