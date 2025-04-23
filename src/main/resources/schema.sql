@@ -42,14 +42,28 @@ create table cart (
 );
 
 create table order_header (
-  order_id bigint not null AUTO_INCREMENT,
-  sub_total decimal(19,2),
-  delivery decimal(19,2),
-  total decimal(19,2),
-  first_name varchar(255),
-  last_name varchar(255),
-  adress varchar(255),
-  phone varchar(255),
-  description clob,
-  primary key (order_id)
+    order_id bigint not null,
+    sub_total decimal(19,2),
+    delivery decimal(19,2),
+    total decimal(19,2),
+    first_name varchar(255),
+    last_name varchar(255),
+    adress varchar(255),
+    phone varchar(255),
+    description clob,
+    primary key (order_id)
 );
+
+create table users (
+    user_id bigint not null,
+    username varchar(255) not null,
+    password varchar(255) not null,
+    enabled boolean not null,
+    primary key (user_id)
+);
+
+create table user_role (
+   role_id bigint not null,
+   role varchar(255) not null,
+   primary key (role_id)
+)
