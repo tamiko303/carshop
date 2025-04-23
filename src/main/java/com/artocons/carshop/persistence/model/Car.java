@@ -77,19 +77,6 @@ public class Car {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
-    public static ProductDTO convertToProductDTO(Car car) {
-        return new ProductDTO(  car.model,
-                                car.brand,
-                                car.description,
-                                car.price,
-                                car.productionYear,
-                                car.mileage,
-                                car.bodyType,
-                                car.engineType,
-                                car.engineCapacity,
-                                car.gearboxType     );
-    }
-
     public String convertColorsToString(Set<Color> colors) {
         return colors.stream()
                      .map(Color::getName)

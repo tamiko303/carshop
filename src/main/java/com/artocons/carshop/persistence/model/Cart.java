@@ -51,9 +51,4 @@ public class Cart {
         this.description = description;
     }
 
-//    public static CartDTO convertToCartDTO(Cart cart) {
-//        return new CartDTO( cart.product,
-//                            cart.quantity,
-//                            cart.description );
-//    }
 }
