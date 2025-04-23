@@ -3,6 +3,7 @@ package com.artocons.carshop.util;
 import com.artocons.carshop.persistence.dtos.CartItemDTO;
 import com.artocons.carshop.persistence.dtos.OrderHeaderDTO;
 import com.artocons.carshop.persistence.dtos.OrderItemDTO;
+import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
