@@ -2,6 +2,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
 <%@ attribute name="showSearch" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="isAdmin" required="true" type="java.lang.Boolean" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,31 +112,9 @@
                 <h1>Car Shop Application</h1>
             </div>
         </header>
-        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group w-75" role="group" aria-label="First group"></div>
-<%--            <c:if test="${showLogin}">--%>
-<%--                <common:login/>--%>
-<%--            </c:if>--%>
-            <c:choose>
-                <c:when test="${isAdmin}">
-                    <common:orderControl/>
-                </c:when>
-                <c:otherwise>
-                    <common:login/>
-                </c:otherwise>
-            </c:choose>
-            <c:choose>
-                <c:when test="${isAdmin}">
-                    <common:logout/>
-                </c:when>
-                <c:otherwise>
-                    <common:myCart/>
-                </c:otherwise>
-            </c:choose>
-<%--            <c:if test="${showCart}">--%>
-<%--                <common:myCart/>--%>
-<%--            </c:if>--%>
-        </div>
+        <c:if test="${showMenu}">
+            <common:menu isAdmin="${isAdmin}"/>
+        </c:if>
         <c:if test="${showSearch}">
             <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
         </c:if>

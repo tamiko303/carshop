@@ -3,7 +3,7 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/order" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<common:page pageTitle="order" isAdmin="false"  showSearch="false" >
+<common:page pageTitle="order" isAdmin="false" showMenu="true" showSearch="false" >
     <div class="row w-25 justify-content-lg-center">
         <h2>Order</h2>
     </div>

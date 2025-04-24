@@ -59,6 +59,9 @@ public class OrderPageController {
         model.addAttribute("delivery", delivery);
         model.addAttribute("total", totalCost);
 
+        model.addAttribute("cartCount", cartService.getCartCount());    //userId
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
+
         return ORDER_PAGE;
     }
 

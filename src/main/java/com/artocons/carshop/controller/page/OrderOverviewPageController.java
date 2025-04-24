@@ -1,6 +1,8 @@
 package com.artocons.carshop.controller.page;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.OrderHeader;
+import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderOverviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,13 +23,16 @@ public class OrderOverviewPageController {
     private static final String ORDER_ID = "orderId";
 
     private final OrderOverviewService orderOverviewService;
+    private final CartService cartService;
 
     @GetMapping(path = "/{orderId}")
     public String getOrderById(@PathVariable(value = "orderId") long orderId,
-                               Model model){
+                               Model model) throws ResourceNotFoundException {
 
         OrderHeader order = orderOverviewService.getOrderByIdOrNull(orderId);
         String message = orderOverviewService.getMessage();
+
+//        model.addAttribute(ORDER, order);
 
         model.addAttribute(ORDER, order.getOrderItems());
         model.addAttribute(ORDER_ID, orderId);
@@ -44,6 +49,9 @@ public class OrderOverviewPageController {
         model.addAttribute("userAdress", order.getAdress());
         model.addAttribute("userPhone", order.getPhone());
         model.addAttribute("userDescription", order.getDescription());
+
+        model.addAttribute("cartCount", cartService.getCartCount());    //userId
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 
         return OVERVIEW_PAGE;
     }
