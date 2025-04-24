@@ -1,9 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<common:page pageTitle="Login" showMenu="false">
+<common:page pageTitle="Login" isAdmin="false"  showSearch="false">
     <div class="row mb-3">
-        <common:back/>
+        <common:back url="/product/goBack"  title="Back to shopping"/>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-4">

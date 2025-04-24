@@ -65,6 +65,8 @@ public class CarListPageController {
         model.addAttribute("cartCount", cartService.getCartCount());    //userId
         model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 
+        model.addAttribute("isAdmin", false);
+
         return CAR_LIST_PAGE;
     }
 

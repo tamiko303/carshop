@@ -1,9 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
-<%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="showSearch" required="true" type="java.lang.Boolean" %>
-<%@ attribute name="showCart" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="isAdmin" required="true" type="java.lang.Boolean" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +15,7 @@
     <script>
         $(document).ready(function() {
             $( "#addToCart .btn-add" ).click( function( event ) {
-                // debugger;
+                debugger;
                 enableAddButton(false);
                 event.preventDefault();
                 let $form = $(this).closest('form');
@@ -34,7 +33,7 @@
                 event.preventDefault();
 
                 $('#updateCart tbody tr.data-form ').each(function() {
-                    // debugger;
+                    debugger;
                     let product = $(this).closest('tr').data('id');
                     $('[data-id=' + 's' + product + ']').text('');
                     let quantity = $(this).closest('tr').find('input.qty').val();
@@ -112,12 +111,31 @@
                 <h1>Car Shop Application</h1>
             </div>
         </header>
-        <c:if test="${showMenu}">
-            <common:menu/>
-        </c:if>
-        <c:if test="${showCart}">
-            <common:myCart/>
-        </c:if>
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group w-75" role="group" aria-label="First group"></div>
+<%--            <c:if test="${showLogin}">--%>
+<%--                <common:login/>--%>
+<%--            </c:if>--%>
+            <c:choose>
+                <c:when test="${isAdmin}">
+                    <common:orderControl/>
+                </c:when>
+                <c:otherwise>
+                    <common:login/>
+                </c:otherwise>
+            </c:choose>
+            <c:choose>
+                <c:when test="${isAdmin}">
+                    <common:logout/>
+                </c:when>
+                <c:otherwise>
+                    <common:myCart/>
+                </c:otherwise>
+            </c:choose>
+<%--            <c:if test="${showCart}">--%>
+<%--                <common:myCart/>--%>
+<%--            </c:if>--%>
+        </div>
         <c:if test="${showSearch}">
             <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
         </c:if>

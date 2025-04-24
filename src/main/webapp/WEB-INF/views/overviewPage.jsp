@@ -3,7 +3,7 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/order" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<common:page pageTitle="order" showMenu="false" showSearch="false" showCart="false">
+<common:page pageTitle="order" isAdmin="false"  showSearch="false" >
     <div class="row w-25 justify-content-lg-center">
         <h4>Thank you for your order.</h4>
         <c:if test="${showMsg}">
