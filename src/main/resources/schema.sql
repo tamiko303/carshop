@@ -42,14 +42,16 @@ create table cart (
 );
 
 create table order_header (
-    order_id bigint not null,
+    order_id bigint not null AUTO_INCREMENT,
+    order_date date not null,
+    order_status varchar(255) not null,
     sub_total decimal(19,2),
     delivery decimal(19,2),
     total decimal(19,2),
-    first_name varchar(255),
-    last_name varchar(255),
-    adress varchar(255),
-    phone varchar(255),
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    adress varchar(255) not null,
+    phone varchar(255) not null,
     description clob,
     primary key (order_id)
 );

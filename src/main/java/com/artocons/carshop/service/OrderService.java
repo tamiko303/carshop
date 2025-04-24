@@ -2,10 +2,9 @@ package com.artocons.carshop.service;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
-import com.artocons.carshop.persistence.dtos.OrderHeaderDTO;
+import com.artocons.carshop.persistence.enums.OrderStatus;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.persistence.repository.OrderRepository;
-import com.artocons.carshop.util.MappingUtils;
 import com.artocons.carshop.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,9 +42,12 @@ public class OrderService {
     @Transactional
     public OrderHeader placeOrder(OrderRequest orderData) throws ResourceNotFoundException, ResourceVaidationException {
         OrderHeader order = new OrderHeader();
+
+        order.setOrderStatus(OrderStatus.PENDING);
+        order.setOrderDate(LocalDate.now());
+
         ValidOrderItems validOrderItems = createOrderItems(order);
         List<OrderItem> orderItems = validOrderItems.getValidItems();
-
         order.setOrderItems(new HashSet<>(orderItems));
 
         order.setFirstName(orderData.getFirstName());
