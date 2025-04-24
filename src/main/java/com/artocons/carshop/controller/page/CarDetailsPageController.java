@@ -34,8 +34,11 @@ public class CarDetailsPageController {
                                 Model model) throws ResourceNotFoundException {
 
         HttpSession session = request.getSession();
-        String previousPage = request.getHeader("Referer");
-        session.setAttribute("previousCarPage", previousPage);
+        String referer = request.getHeader("Referer");
+        if (referer != null && referer.contains("Cars")) {
+            session.setAttribute("previousCarPage", referer);
+        }
+        session.setAttribute("previousPage", referer);
 
         try {
             Car carDetails = carService.getCarById(carId);

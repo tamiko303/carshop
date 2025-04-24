@@ -30,8 +30,8 @@ public class CartPageController {
                                   Model model) throws ResourceNotFoundException {
 
         HttpSession session = request.getSession();
-        String previousPage = request.getHeader("Referer");
-        session.setAttribute("previousPage", previousPage);
+        String referer = request.getHeader("Referer");
+        session.setAttribute("previousPage", referer);
 
         Page<CartItemDTO> cartItems = cartService.getCartPage(Pageable.unpaged());
 
