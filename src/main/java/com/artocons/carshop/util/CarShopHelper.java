@@ -7,6 +7,7 @@ import com.artocons.carshop.persistence.model.Car;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +55,19 @@ public class CarShopHelper {
                     .orElse(0);
         }
         return oldQuantity;
+    }
+
+    public static void setHistoryReferer(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String referer = request.getHeader("Referer");
+        if (referer != null && referer.contains("cars")) {
+            session.setAttribute("previousCarPage", referer);
+        }
+        if (referer != null && referer.contains("cart")) {
+            session.setAttribute("previousCartPage", referer);
+        }
+        session.setAttribute("previousPage", referer);
     }
 
 }

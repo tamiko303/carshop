@@ -4,6 +4,7 @@ import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
+import com.artocons.carshop.util.CarShopHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +34,7 @@ public class CarDetailsPageController {
                                 HttpServletRequest request,
                                 Model model) throws ResourceNotFoundException {
 
-        HttpSession session = request.getSession();
-        String referer = request.getHeader("Referer");
-        if (referer != null && referer.contains("Cars")) {
-            session.setAttribute("previousCarPage", referer);
-        }
-        session.setAttribute("previousPage", referer);
+        CarShopHelper.setHistoryReferer(request);
 
         try {
             Car carDetails = carService.getCarById(carId);

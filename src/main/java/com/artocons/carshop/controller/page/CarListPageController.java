@@ -81,7 +81,6 @@ public class CarListPageController {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AjaxResponse(e.getMessage(), "404", newResData));
         } catch (ResourceVaidationException e) {
-//                System.out.println(format("Hi! I am error (%s)", e.getMessage()));
                 return ResponseEntity.badRequest().body(new AjaxResponse(e.getMessage(), "422", newResData));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AjaxResponse(e.getMessage(), "500", newResData));
