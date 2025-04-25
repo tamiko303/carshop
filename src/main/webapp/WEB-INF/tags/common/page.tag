@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function() {
             $( "#addToCart .btn-add" ).click( function( event ) {
-                debugger;
+                // debugger;
                 enableAddButton(false);
                 event.preventDefault();
                 let $form = $(this).closest('form');
@@ -34,7 +34,7 @@
                 event.preventDefault();
 
                 $('#updateCart tbody tr.data-form ').each(function() {
-                    debugger;
+                    // debugger;
                     let product = $(this).closest('tr').data('id');
                     $('[data-id=' + 's' + product + ']').text('');
                     let quantity = $(this).closest('tr').find('input.qty').val();
@@ -49,7 +49,7 @@
         });
 
         $(document).ready(function() {
-            debugger;
+            // debugger;
             $( "#btn-user_data" ).click( function( event ) {
                 let $forms = $(this).closest('form.needs-validation');
 

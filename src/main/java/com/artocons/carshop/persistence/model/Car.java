@@ -1,6 +1,5 @@
 package com.artocons.carshop.persistence.model;
 
-import com.artocons.carshop.persistence.dtos.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

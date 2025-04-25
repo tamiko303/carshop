@@ -5,6 +5,7 @@ import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.enums.OrderStatus;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.persistence.repository.OrderRepository;
+import com.artocons.carshop.persistence.request.OrderRequest;
 import com.artocons.carshop.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

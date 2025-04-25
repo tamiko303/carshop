@@ -57,15 +57,21 @@ create table order_header (
 );
 
 create table users (
-    user_id bigint not null,
+    user_id bigint not null AUTO_INCREMENT,
     username varchar(255) not null,
     password varchar(255) not null,
     enabled boolean not null,
     primary key (user_id)
 );
 
-create table user_role (
+create table `roles` (
    role_id bigint not null,
-   role varchar(255) not null,
+   role_name varchar(255) not null,
    primary key (role_id)
-)
+);
+
+create table `user_roles` (
+    user_id bigint not null,
+    role_id bigint not null,
+    primary key (user_id, role_id)
+);

@@ -4,7 +4,7 @@ import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
-import com.artocons.carshop.persistence.model.OrderRequest;
+import com.artocons.carshop.persistence.request.OrderRequest;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderService;
 import lombok.RequiredArgsConstructor;

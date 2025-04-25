@@ -72,6 +72,8 @@ insert into car_colors (car_id, color_id) values (8, 3);
 insert into car_colors (car_id, color_id) values (9, 2);
 insert into car_colors (car_id, color_id) values (9, 1);
 
-insert into users (user_id, username, password, enabled) values (1, 'Admin', 'admin', true);
+insert into users (user_id, username, password, enabled) values (1, 'Admin', '$2y$10$S5XdYZ4.bDTql4AbDK0zL.TU3iF0Z4RvqnCHW4UK9OklTtXcLALa2', true);
 
-insert into user_role (role_id, role) values (1, 'Admin');
+insert into roles (role_id, role_name) values (1, 'ROLE_ADMIN');
+
+insert into user_roles (user_id, role_id) values (1, 1);
