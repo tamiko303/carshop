@@ -43,11 +43,16 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(Customizer.withDefaults())
             .authorizeRequests((request) -> request
-                    .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                    .anyRequest().permitAll()
+                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .anyRequest().permitAll()
             ).formLogin(form -> form
-                        .loginPage("/auth")
-                        .permitAll());
+                .loginPage("/auth")
+                .permitAll()
+            ).logout()
+            .logoutSuccessUrl("/auth")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+            .permitAll();
         return httpSecurity.build();
     }
 
