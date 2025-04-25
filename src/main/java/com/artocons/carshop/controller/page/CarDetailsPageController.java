@@ -2,6 +2,7 @@ package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Car;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.util.CarShopHelper;
@@ -28,6 +29,7 @@ public class CarDetailsPageController {
 
     private final CarService carService;
     private final CartService cartService;
+    private final AuthService authService;
 
     @GetMapping( "/{carId}")
     public String getCarDetails(@PathVariable("carId") Long carId,
@@ -41,8 +43,10 @@ public class CarDetailsPageController {
 
             model.addAttribute(CAR_ITEM, carDetails);
 
-            model.addAttribute("cartCount", cartService.getCartCount());    //userId
-            model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
+            model.addAttribute("cartCount", cartService.getCartCount());
+            model.addAttribute("cartTotalCost", cartService.getCartTotalCost());
+
+            model.addAttribute("isAdmin", authService.getIsAdmin());
 
         } catch (NoSuchElementException e){
             throw new ResourceNotFoundException(e.getMessage());

@@ -5,6 +5,7 @@ import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.persistence.request.AjaxRequest;
 import com.artocons.carshop.persistence.response.AjaxResponse;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class CarListPageController {
 
     private final CarService carService;
     private final CartService cartService;
+    private final AuthService authService;
 
     @GetMapping
     public String getCarsList(Model model) throws ResourceNotFoundException {
@@ -65,7 +67,7 @@ public class CarListPageController {
         model.addAttribute("cartCount", cartService.getCartCount());    //userId
         model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
 
-        model.addAttribute("isAdmin", false);
+        model.addAttribute("isAdmin", authService.getIsAdmin());
 
         return CAR_LIST_PAGE;
     }

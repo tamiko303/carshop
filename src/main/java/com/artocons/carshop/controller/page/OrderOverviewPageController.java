@@ -2,6 +2,7 @@ package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.OrderHeader;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderOverviewService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class OrderOverviewPageController {
 
     private final OrderOverviewService orderOverviewService;
     private final CartService cartService;
+    private final AuthService authService;
 
     @GetMapping(path = "/{orderId}")
     public String getOrderById(@PathVariable(value = "orderId") long orderId,
@@ -31,8 +33,6 @@ public class OrderOverviewPageController {
 
         OrderHeader order = orderOverviewService.getOrderByIdOrNull(orderId);
         String message = orderOverviewService.getMessage();
-
-//        model.addAttribute(ORDER, order);
 
         model.addAttribute(ORDER, order.getOrderItems());
         model.addAttribute(ORDER_ID, orderId);
@@ -50,8 +50,10 @@ public class OrderOverviewPageController {
         model.addAttribute("userPhone", order.getPhone());
         model.addAttribute("userDescription", order.getDescription());
 
-        model.addAttribute("cartCount", cartService.getCartCount());    //userId
-        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
+        model.addAttribute("cartCount", cartService.getCartCount());
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());
+
+        model.addAttribute("isAdmin", authService.getIsAdmin());
 
         return OVERVIEW_PAGE;
     }

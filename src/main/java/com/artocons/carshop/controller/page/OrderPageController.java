@@ -5,6 +5,7 @@ import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.persistence.request.OrderRequest;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderService;
 import com.artocons.carshop.util.CarShopHelper;
@@ -40,6 +41,8 @@ public class OrderPageController {
 
     private final OrderService orderService;
     private final CartService cartService;
+    private final AuthService authService;
+
 
     @GetMapping
     public String showOrder(HttpServletRequest request,
@@ -58,8 +61,10 @@ public class OrderPageController {
         model.addAttribute("delivery", delivery);
         model.addAttribute("total", totalCost);
 
-        model.addAttribute("cartCount", cartService.getCartCount());    //userId
-        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());    //userId
+        model.addAttribute("cartCount", cartService.getCartCount());
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());
+
+        model.addAttribute("isAdmin", authService.getIsAdmin());
 
         return ORDER_PAGE;
     }

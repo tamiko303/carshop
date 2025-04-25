@@ -2,6 +2,7 @@ package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.dtos.CartItemDTO;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.util.CarShopHelper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class CartPageController {
     private static final String CART = "cart";
 
     private final CartService cartService;
+    private final AuthService authService;
 
     @GetMapping
     public String getAllItemsCart(HttpServletRequest request,
@@ -36,6 +38,8 @@ public class CartPageController {
         model.addAttribute(CART, cartItems);
         model.addAttribute("cartCount", cartService.getCartCount());
         model.addAttribute("cartTotalCost", cartService.getCartTotalCost());
+
+        model.addAttribute("isAdmin", authService.getIsAdmin());
 
         return CART_PAGE;
     }

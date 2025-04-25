@@ -4,7 +4,7 @@
 
 <c:url var="loginLink" value="/auth/login"/>
 
-<common:page pageTitle="Login" isAdmin="false" showMenu="false" showSearch="false">
+<common:page pageTitle="Login" isAdmin="${isAdmin}" showMenu="false" showSearch="false">
     <div class="row mb-3">
         <common:back url="/product/goBack"  title="Back to shopping"/>
     </div>
