@@ -50,6 +50,28 @@
         });
 
         $(document).ready(function() {
+            debugger;
+            $( "#delivered .btn-sm" ).click( function( event ) {
+                enableAddButton(false);
+                event.preventDefault();
+
+                let $order = $(this).closest('form').data('id');
+                setStatus($order ,$.param({ status: 'DELIVERED' }) )
+            });
+        });
+
+        $(document).ready(function() {
+            debugger;
+            $( "#rejected .btn-sm" ).click( function( event ) {
+                enableAddButton(false);
+                event.preventDefault();
+
+                let $order = $(this).closest('form').data('id');
+                setStatus($order ,$.param({ status: 'REJECTED' }) )
+            });
+        });
+
+        $(document).ready(function() {
             // debugger;
             $( "#btn-user_data" ).click( function( event ) {
                 let $forms = $(this).closest('form.needs-validation');
@@ -96,9 +118,25 @@
             });
         }
 
-        function validateOrderData() {
-            debugger;
-            let $form = $(this).closest('order');
+        function setStatus(order, form) {
+            $.ajax({
+                type : "POST",
+                url : "${home}" + "/admin/orders/"  + order + "/setStatus",
+                data: form,
+                success : function(response) {
+                    $('#status').text(response.data.status);
+                },
+                error : function(e) {
+                    if (e.responseJSON.code == "422") {
+                        $('#error').text(e.responseJSON.msg);
+                    }
+
+                },
+                done : function() {
+                    console.log("DONE");
+                    enableAddButton(true);
+                }
+            });
         }
 
     </script>

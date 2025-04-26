@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class OrderService {
 
     @Value("${spring.delivery.price}")
     private BigDecimal delivery;
+
+    private static final EnumSet<OrderStatus> STATUS_SET = EnumSet.allOf(OrderStatus.class);
 
     private final HttpSession session;
     private final CartService cartService;
@@ -45,9 +48,18 @@ public class OrderService {
         return orderRepository.findAll(pageable);
     }
 
-    public OrderHeader getOrderByIdOrNull(long orderId) {
-
-        return orderRepository.findById(orderId).orElse(null);
+    @Transactional
+    public OrderStatus setStatus(Long orderId, OrderStatus status) throws ResourceNotFoundException {
+        OrderHeader order = orderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            throw new ResourceNotFoundException("Order not found for id :: " + orderId);
+        }
+        OrderHeader saveOrder = new OrderHeader();
+        if (STATUS_SET.contains(OrderStatus.valueOf(String.valueOf(status)))) {
+            order.setOrderStatus(status);
+            saveOrder = orderRepository.save(order);
+        }
+        return saveOrder.getOrderStatus();
     }
 
     @Transactional
