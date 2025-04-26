@@ -5,7 +5,7 @@
 
 <common:page pageTitle="Admin panel" showMenu="true" showSearch="false" isAdmin="${isAdmin}">
     <div class="container justify-content-start">
-        <div class="row gx-5">
+        <div class="row gx-2">
             <h3>Orders</h3>
         </div>
     </div>
@@ -14,8 +14,8 @@
         <tr>
             <th scope="col">Order number </th>
             <th scope="col">Customer </th>
-            <th scope="col">Phone </th>
             <th scope="col">Adress </th>
+            <th scope="col">Phone </th>
             <th scope="col">Date </th>
             <th scope="col">Total price </th>
             <th scope="col">Status </th>

@@ -1,6 +1,9 @@
 package com.artocons.carshop.controller.page;
 
+import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.OrderHeader;
+import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.OrderService;
 import com.artocons.carshop.util.CarShopHelper;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.NoSuchElementException;
+
 import static com.artocons.carshop.util.CarShopConstants.ADMIN_PATH;
 
 @Controller
@@ -28,6 +33,7 @@ public class AdminPageController {
     private static final String ORDER_DETAILS_PAGE = "admin/orderDetailsPage";
 
     private static final String ORDERS = "orders";
+    private static final String ORDER = "order";
 
     private final AuthService authService;
     private final OrderService orderService;
@@ -50,18 +56,35 @@ public class AdminPageController {
 
         model.addAttribute(ORDERS, orders);
         model.addAttribute("isAdmin", authService.getIsAdmin());
+        model.addAttribute("isOrders", true);
 
         return ADMIN_ORDERS_PAGE;
     }
 
     @GetMapping("/orders/{orderId}")
-    public String adminOrderDetails(@PathVariable("orderId") Long orderId) {
+    public String adminOrderDetails(@PathVariable("orderId") Long orderId,
+                                    HttpServletRequest request,
+                                    Model model) throws ResourceNotFoundException {
+
+        CarShopHelper.setHistoryReferer(request);
+
+        try {
+
+            OrderHeader orderDetails = orderService.getOrderByIdOrNull(orderId);
+
+            model.addAttribute(ORDER, orderDetails);
+            model.addAttribute("isAdmin", authService.getIsAdmin());
+            model.addAttribute("isOrders", true);
+
+        } catch (NoSuchElementException e){
+            throw new ResourceNotFoundException(e.getMessage());
+        }
 
         return ORDER_DETAILS_PAGE;
     }
 
-    @PostMapping("/orders/{orderId}/changeStatus")
-    public String adminOrderChangeStatus(@PathVariable("orderId") Long orderId) {
+    @PostMapping("/orders/{orderId}/setStatus")
+    public String adminOrderSetStatus(@PathVariable("orderId") Long orderId) {
 
         return ORDER_DETAILS_PAGE;
     }

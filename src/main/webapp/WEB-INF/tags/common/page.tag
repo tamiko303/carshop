@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="<c:url value="/css/carshop.css"/>"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
@@ -112,9 +113,14 @@
                 <h1>Car Shop Application</h1>
             </div>
         </header>
-        <c:if test="${showMenu}">
-            <common:menu isAdmin="${isAdmin}"/>
-        </c:if>
+        <c:choose>
+            <c:when test="${isOrders}">
+                <common:adminMenu isAdmin="${isAdmin}"/>
+            </c:when>
+            <c:when test="${showMenu}">
+                <common:menu isAdmin="${isAdmin}"/>
+            </c:when>
+        </c:choose>
         <c:if test="${showSearch}">
             <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
         </c:if>

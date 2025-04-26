@@ -45,6 +45,11 @@ public class OrderService {
         return orderRepository.findAll(pageable);
     }
 
+    public OrderHeader getOrderByIdOrNull(long orderId) {
+
+        return orderRepository.findById(orderId).orElse(null);
+    }
+
     @Transactional
     public OrderHeader placeOrder(OrderRequest orderData) throws ResourceNotFoundException, ResourceVaidationException {
         OrderHeader order = new OrderHeader();
