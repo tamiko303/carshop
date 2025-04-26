@@ -9,6 +9,7 @@ import com.artocons.carshop.persistence.request.OrderRequest;
 import com.artocons.carshop.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,10 @@ public class OrderService {
     public PageImpl<OrderItem> showOrderPage(Pageable pageable ) {
         List<OrderItem> orderItems = formOrderItemsFromCart();
         return new PageImpl<>(orderItems, pageable, orderItems.size());
+    }
+
+    public Page<OrderHeader> getAllOrders(Pageable pageable ) {
+        return orderRepository.findAll(pageable);
     }
 
     @Transactional

@@ -11,7 +11,6 @@ import java.util.Set;
 
 @Setter
 @Getter
-@ToString
 @Table(name = "order_header")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +19,7 @@ public class OrderHeader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", updatable = false, nullable = false)
+    @Column(name = "order_id")
     private Long orderId;
 
     private LocalDate orderDate;
@@ -39,4 +38,9 @@ public class OrderHeader {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return this.orderDate + " " + this.orderStatus;
+    }
 }

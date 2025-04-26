@@ -44,7 +44,7 @@ public class AuthController {
 
 //        ShopUser shopUser = (ShopUser) authentication.getPrincipal();
 
-        return "redirect:/admin/orders";
+        return "redirect:/admin";
     }
 
 

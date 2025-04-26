@@ -1,8 +1,12 @@
 package com.artocons.carshop.controller.page;
 
+import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.service.AuthService;
+import com.artocons.carshop.service.OrderService;
 import com.artocons.carshop.util.CarShopHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,22 +24,34 @@ import static com.artocons.carshop.util.CarShopConstants.ADMIN_PATH;
 public class AdminPageController {
 
     private static final String ADMIN_PANEL_PAGE = "admin/adminPanelPage";
-    private static final String ORDER_DETAILS_PAGE = "orderDetailsPage";
+    private static final String ADMIN_ORDERS_PAGE = "admin/adminOrdersPage";
+    private static final String ORDER_DETAILS_PAGE = "admin/orderDetailsPage";
+
+    private static final String ORDERS = "orders";
 
     private final AuthService authService;
+    private final OrderService orderService;
 
-
-    @GetMapping("/orders")
-    public String adminOrders(HttpServletRequest request,
+    @GetMapping()
+    public String adminPanel(HttpServletRequest request,
                               Model model) {
 
         CarShopHelper.setHistoryReferer(request);
 
-        String string = "admin/orders";
-
         model.addAttribute("isAdmin", authService.getIsAdmin());
 
         return ADMIN_PANEL_PAGE;
+    }
+
+    @GetMapping("/orders")
+    public String adminOrders(Model model) {
+
+        Page<OrderHeader> orders = orderService.getAllOrders(Pageable.unpaged());
+
+        model.addAttribute(ORDERS, orders);
+        model.addAttribute("isAdmin", authService.getIsAdmin());
+
+        return ADMIN_ORDERS_PAGE;
     }
 
     @GetMapping("/orders/{orderId}")
