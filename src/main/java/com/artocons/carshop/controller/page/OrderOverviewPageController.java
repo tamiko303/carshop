@@ -5,6 +5,7 @@ import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderOverviewService;
+import com.artocons.carshop.util.CarShopHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,15 +41,7 @@ public class OrderOverviewPageController {
         model.addAttribute("showMsg", !message.isEmpty());
         model.addAttribute("message", message);
 
-        model.addAttribute("subTotal", order.getSubTotal());
-        model.addAttribute("delivery", order.getDelivery());
-        model.addAttribute("total", order.getTotal());
-
-        model.addAttribute("userName", order.getFirstName());
-        model.addAttribute("userSuName", order.getLastName());
-        model.addAttribute("userAdress", order.getAdress());
-        model.addAttribute("userPhone", order.getPhone());
-        model.addAttribute("userDescription", order.getDescription());
+        CarShopHelper.setOrderDetailsAttribute(model, order);
 
         model.addAttribute("cartCount", cartService.getCartCount());
         model.addAttribute("cartTotalCost", cartService.getCartTotalCost());

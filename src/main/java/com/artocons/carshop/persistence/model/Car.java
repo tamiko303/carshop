@@ -73,8 +73,8 @@ public class Car {
     )
     private Set<Color> colors = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderItem> orderItems = new HashSet<>();
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<OrderItem> orderItems = new HashSet<>();
 
     public String convertColorsToString(Set<Color> colors) {
         return colors.stream()
