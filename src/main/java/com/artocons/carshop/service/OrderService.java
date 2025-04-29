@@ -95,7 +95,7 @@ public class OrderService {
         return saveOrder;
     }
 
-    private ValidOrderItems createOrderItems(OrderHeader order) throws ResourceNotFoundException, ResourceVaidationException {
+    ValidOrderItems createOrderItems(OrderHeader order) throws ResourceNotFoundException, ResourceVaidationException {
         List<OrderItem> itemsFromCart = formOrderItemsFromCart();
 
         ValidOrderItems validOrderItems = orderValidator.validate(itemsFromCart);
@@ -111,7 +111,7 @@ public class OrderService {
         return validOrderItems;
     }
 
-    private List<OrderItem> formOrderItemsFromCart() {
+    List<OrderItem> formOrderItemsFromCart() {
         List<Cart> cart = cartService.getCartList();
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -125,7 +125,7 @@ public class OrderService {
        return orderItems;
     }
 
-    private BigDecimal calculateSubTotalAmount(List<OrderItem> orderItemList) {
+    BigDecimal calculateSubTotalAmount(List<OrderItem> orderItemList) {
         return  orderItemList
                 .stream()
                 .map(item -> item.getProduct().getPrice()

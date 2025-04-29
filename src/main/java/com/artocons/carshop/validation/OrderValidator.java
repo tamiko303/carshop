@@ -33,7 +33,7 @@ public class OrderValidator {
 
                 if (orderItemQuantity > stock.getStock()) {
                     errorIds.add(orderItem.getProduct().getId());
-                    orderItem.setQuantity((int) (stock.getStock() - orderItemQuantity));
+                    orderItem.setQuantity(Math.toIntExact(stock.getStock()));
                     newItems.add(orderItem);
 
                 } else {
