@@ -33,6 +33,9 @@ public class OrderOverviewPageController {
                                Model model) throws ResourceNotFoundException {
 
         OrderHeader order = orderOverviewService.getOrderByIdOrNull(orderId);
+        if (order == null) {
+            throw new ResourceNotFoundException("Order not found");
+        }
         String message = orderOverviewService.getMessage();
 
         model.addAttribute(ORDER, order.getOrderItems());

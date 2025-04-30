@@ -1,74 +1,112 @@
 package com.artocons.carshop.controller.page;
 
-import com.artocons.carshop.exception.ResourceNotFoundException;
+import com.artocons.carshop.persistence.enums.OrderStatus;
+import com.artocons.carshop.persistence.model.Car;
+import com.artocons.carshop.persistence.model.Cart;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderOverviewService;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
+
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import static org.h2.store.fs.FilePath.get;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@RequiredArgsConstructor
+@WebMvcTest(OrderOverviewPageController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class OrderOverviewPageControllerIntegrationTest {
 
-    private final MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private OrderOverviewService orderOverviewService;
 
-    @Mock
+    @MockBean
     private CartService cartService;
 
-    @InjectMocks
-    private OrderOverviewPageController orderOverviewPageController;
+    @MockBean
+    private AuthService authService;
 
-    @BeforeEach
-    public void setUp() throws ResourceNotFoundException {
-        OrderHeader mockOrderHeader = new OrderHeader();
-        mockOrderHeader.setOrderItems((Set<OrderItem>) new ArrayList<OrderItem>());
-
-        when(orderOverviewService.getOrderByIdOrNull(anyLong())).thenReturn(mockOrderHeader);
-        when(orderOverviewService.getMessage()).thenReturn("Test message");
-        when(cartService.getCartCount()).thenReturn(5);
-        when(cartService.getCartTotalCost()).thenReturn(new BigDecimal("200.00"));
+    private OrderHeader createTestOrder(Long id) {
+        return new OrderHeader(
+                id,
+                LocalDate.now(),
+                OrderStatus.PENDING,
+                BigDecimal.valueOf(130000.00),
+                BigDecimal.valueOf(500.00),
+                BigDecimal.valueOf(130500.00),
+                "Pat",
+                "Sedan",
+                "Petrol-21",
+                "2223111",
+                "Automatic",
+                new HashSet<>()
+        );
     }
+
     @Test
-    public void testGetOrderById() throws Exception {
+    public void testGetOrderById_Success() throws Exception {
         long orderId = 1L;
 
-        mockMvc.perform((RequestBuilder) get("/orders/" + orderId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("overviewPage"))
-                .andExpect(model().attributeExists("order"))
-                .andExpect(model().attribute("orderId", orderId))
-                .andExpect(model().attribute("showMsg", true))
-                .andExpect(model().attribute("message", "Test message"))
-                .andExpect(model().attribute("cartCount", 5))
-                .andExpect(model().attribute("cartTotalCost", new BigDecimal("200.00")));
+        OrderHeader order = createTestOrder(orderId);
 
-        verify(orderOverviewService).getOrderByIdOrNull(orderId);
-        verify(orderOverviewService).getMessage();
-        verify(cartService).getCartCount();
-        verify(cartService).getCartTotalCost();
+        Car car = new Car();
+        car.setBrand("Toyota");
+        car.setModel("Camry");
+
+        OrderItem orderItem = new OrderItem();
+        orderItem.setProduct(car);
+        orderItem.setQuantity(2);
+
+        Set<OrderItem> orderItems = Set.of(orderItem);
+        order.setOrderItems(orderItems);
+
+        String message = "Test message";
+
+        when(orderOverviewService.getOrderByIdOrNull(orderId)).thenReturn(order);
+        when(orderOverviewService.getMessage()).thenReturn(message);
+        when(cartService.getCartCount()).thenReturn(5);
+        when(cartService.getCartTotalCost()).thenReturn(new BigDecimal("200.00"));
+
+        mockMvc.perform(get("/order-overview/" + orderId))
+            .andExpect(status().isOk())
+            .andExpect(view().name("overviewPage"))
+            .andExpect(model().attributeExists("order"))
+            .andExpect(model().attribute("orderId", orderId))
+            .andExpect(model().attribute("showMsg", true))
+            .andExpect(model().attribute("message", message))
+            .andExpect(model().attribute("cartCount", 5))
+            .andExpect(model().attribute("cartTotalCost", new BigDecimal("200.00")));
+
     }
+
+    @Test
+    void testGetOrderById_OrderNotFound_ShouldThrowResourceNotFoundException() throws Exception {
+        long orderId = 2L;
+
+        when(orderOverviewService.getOrderByIdOrNull(orderId)).thenReturn(null);
+
+        mockMvc.perform(get("/order-overview/" + orderId))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
 
 }
