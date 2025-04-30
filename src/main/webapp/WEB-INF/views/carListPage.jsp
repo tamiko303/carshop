@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<common:page pageTitle="Car list" showMenu="false" showSearch="true">
+<common:page pageTitle="Car list" showMenu="false" showSearch="true" showCart="true">
     <table class="table table-striped" id="addToCart">
         <thead>
         <tr>

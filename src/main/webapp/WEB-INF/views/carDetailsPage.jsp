@@ -1,12 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<common:page pageTitle="Car details" showMenu="false" showSearch="false">
+<common:page pageTitle="Car details" showMenu="false" showSearch="false" showCart="true">
     <div class="container">
         <div class="row align-items-start">
             <div class="col">
                 <div class="row mb-3">
-                    <common:back/>
+                    <common:back url="/product/goBack" title="Back to product list"/>
                 </div>
                 <h4><c:out value="${carItem.brand}"/></h4>
                 <img src="<c:url value="https://raw.githubusercontent.com/Alex-Job/img/refs/heads/main/car.png"/>" width="100" height="100" alt="Car image">

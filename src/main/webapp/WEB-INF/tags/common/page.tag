@@ -3,6 +3,7 @@
 <%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
 <%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="showSearch" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="showCart" required="true" type="java.lang.Boolean" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +25,6 @@
                 let qty = 1;
 
                 addToCart(product, qty, $form.serialize());
-                location.reload(true);
             });
         });
 
@@ -42,10 +42,29 @@
                     let qty = +quantity - qtyOld;
 
                     if (qty != 0) {
-                        addToCart(product, +quantity ,$.param({ quantity: qty }) );
-                        location.reload(true);
+                        addToCart(product, +quantity ,$.param({ quantity: qty }) )
                     }
                 });
+            });
+        });
+
+        $(document).ready(function() {
+            debugger;
+            $( "#btn-user_data" ).click( function( event ) {
+                let $forms = $(this).closest('form.needs-validation');
+
+                Array.prototype.slice.call($forms)
+                    .forEach(function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault()
+                                event.stopPropagation()
+                            }
+
+                            form.classList.add('was-validated')
+                        }, false)
+                    })
+
             });
         });
 
@@ -61,7 +80,7 @@
                 success : function(response) {
                     $('#count').text(response.data.count);
                     $('#total').text(response.data.total);
-                    $('[data-qty=' + '0' + product + ']').text(qty);
+                    $('[data-id=' + product + ']').data('qty', qty);
                 },
                 error : function(e) {
                     if (e.responseJSON.code == "422") {
@@ -74,6 +93,11 @@
                     enableAddButton(true);
                 }
             });
+        }
+
+        function validateOrderData() {
+            debugger;
+            let $form = $(this).closest('order');
         }
 
     </script>
@@ -91,7 +115,9 @@
         <c:if test="${showMenu}">
             <common:menu/>
         </c:if>
-        <common:myCart/>
+        <c:if test="${showCart}">
+            <common:myCart/>
+        </c:if>
         <c:if test="${showSearch}">
             <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
         </c:if>

@@ -35,7 +35,7 @@ public class CarDetailsPageController {
 
         HttpSession session = request.getSession();
         String previousPage = request.getHeader("Referer");
-        session.setAttribute("previousPage", previousPage);
+        session.setAttribute("previousCarPage", previousPage);
 
         try {
             Car carDetails = carService.getCarById(carId);
@@ -53,7 +53,7 @@ public class CarDetailsPageController {
 
     @GetMapping("/goBack")
     public String goBack(HttpSession session) {
-        String referer = (String) session.getAttribute("previousPage");
+        String referer = (String) session.getAttribute("previousCarPage");
 
         return (referer != null) ? "redirect:" + referer : "redirect:/cars";
     }

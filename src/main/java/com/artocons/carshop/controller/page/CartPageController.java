@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import static com.artocons.carshop.util.CarShopConstants.*;
 
 @Controller
@@ -23,7 +26,13 @@ public class CartPageController {
     private final CartService cartService;
 
     @GetMapping
-    public String getAllItemsCart(Model model) throws ResourceNotFoundException {
+    public String getAllItemsCart(HttpServletRequest request,
+                                  Model model) throws ResourceNotFoundException {
+
+        HttpSession session = request.getSession();
+        String previousPage = request.getHeader("Referer");
+        session.setAttribute("previousPage", previousPage);
+
         Page<CartItemDTO> cartItems = cartService.getCartPage(Pageable.unpaged());
 
         model.addAttribute(CART, cartItems);

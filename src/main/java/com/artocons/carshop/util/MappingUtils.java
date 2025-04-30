@@ -1,15 +1,15 @@
 package com.artocons.carshop.util;
 
-import com.artocons.carshop.exception.ResourceNotFoundException;
-import com.artocons.carshop.persistence.dtos.CartDTO;
 import com.artocons.carshop.persistence.dtos.CartItemDTO;
+import com.artocons.carshop.persistence.dtos.OrderHeaderDTO;
+import com.artocons.carshop.persistence.dtos.OrderItemDTO;
 import com.artocons.carshop.persistence.model.Car;
 import com.artocons.carshop.persistence.model.Cart;
+import com.artocons.carshop.persistence.model.OrderHeader;
+import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +32,32 @@ public class MappingUtils {
         return cartItemDto;
     }
 
+    public static OrderItemDTO convertToOrderItemDTO(OrderItem orderItem) {
+        OrderItemDTO dto = new OrderItemDTO(orderItem.getProduct().getId(), orderItem.getQuantity());
+
+        return dto;
+    }
+
+    public static OrderHeaderDTO convertToOrderHeaderDTO(OrderHeader order, String message) {
+        OrderHeaderDTO dto = new OrderHeaderDTO();
+        dto.setOrderId(order.getOrderId());
+        dto.setSubTotal(order.getSubTotal());
+        dto.setDelivery(order.getDelivery());
+        dto.setTotal(order.getTotal());
+
+        dto.setFirstName(order.getFirstName());
+        dto.setLastName(order.getLastName());
+        dto.setAdress(order.getAdress());
+        dto.setPhone(order.getPhone());
+        dto.setDescription(order.getDescription());
+
+        dto.setMessage(message);
+
+        dto.setItems(order.getOrderItems());
+
+        return dto;
+    }
+
     //dto -> entity
     public static Cart convertToCartItemEntity(CartItemDTO cartItemDTO) {
         Cart entity = new Cart();
@@ -41,4 +67,5 @@ public class MappingUtils {
 
         return entity;
     }
+
 }

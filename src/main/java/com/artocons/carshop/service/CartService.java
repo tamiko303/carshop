@@ -148,4 +148,8 @@ public class CartService {
         targetElement.ifPresent(i -> cart.remove(i));
     }
 
+    public void clearCart(){
+        session.removeAttribute("cart");
+    }
+
 }

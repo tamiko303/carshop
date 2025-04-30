@@ -5,12 +5,21 @@ spring:
       suffix: .jsp
   pagination:
     cars-per-page: 5
+  delivery:
+    price: 500.00
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   datasource:
     url: jdbc:h2:mem:carshopdb
     username: sa
     password: password
     driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
