@@ -86,7 +86,7 @@ public class AdminPageController {
         return ORDER_DETAILS_PAGE;
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/orders/goBack")
     public String goBack(HttpSession session) {
         String referer = (String) session.getAttribute("previousPage");
 
