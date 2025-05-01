@@ -1,5 +1,6 @@
-package com.artocons.carshop.persistence.model;
+package com.artocons.carshop.persistence.response;
 
+import com.artocons.carshop.persistence.model.ResultData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

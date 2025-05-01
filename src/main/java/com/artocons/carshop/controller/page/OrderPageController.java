@@ -4,9 +4,11 @@ import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
-import com.artocons.carshop.persistence.model.OrderRequest;
+import com.artocons.carshop.persistence.request.OrderRequest;
+import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CartService;
 import com.artocons.carshop.service.OrderService;
+import com.artocons.carshop.util.CarShopHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,14 +41,14 @@ public class OrderPageController {
 
     private final OrderService orderService;
     private final CartService cartService;
+    private final AuthService authService;
+
 
     @GetMapping
     public String showOrder(HttpServletRequest request,
                             Model model) throws ResourceNotFoundException {
 
-        HttpSession session = request.getSession();
-        String previousPage = request.getHeader("Referer");
-        session.setAttribute("previousCartPage", previousPage);
+        CarShopHelper.setHistoryReferer(request);
 
         Page<OrderItem> order = orderService.showOrderPage(Pageable.unpaged());
 
@@ -58,6 +60,11 @@ public class OrderPageController {
         model.addAttribute("subTotal", subTotalCost);
         model.addAttribute("delivery", delivery);
         model.addAttribute("total", totalCost);
+
+        model.addAttribute("cartCount", cartService.getCartCount());
+        model.addAttribute("cartTotalCost", cartService.getCartTotalCost());
+
+        model.addAttribute("isAdmin", authService.getIsAdmin());
 
         return ORDER_PAGE;
     }

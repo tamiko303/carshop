@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<common:page pageTitle="Car details" showMenu="false" showSearch="false" showCart="true">
+<common:page pageTitle="Car details" isAdmin="${isAdmin}" showMenu="true" showSearch="false">
     <div class="container">
         <div class="row align-items-start">
             <div class="col">
@@ -27,7 +27,7 @@
                             <form id="${carItem.id}">
                                 <button
                                         type="submit"
-                                        class="btn btn-danger btn-sm">
+                                        class="btn btn-danger btn-sm  btn-add">
                                     Add to Cart
                                 </button>
                             </form>

@@ -1,4 +1,4 @@
-package com.artocons.carshop.persistence.model;
+package com.artocons.carshop.persistence.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

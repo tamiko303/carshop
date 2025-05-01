@@ -4,7 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:url var="orderLink" value="/order"/>
 
-<common:page pageTitle="Cart" showMenu="false" showSearch="false"  showCart="true">
+<common:page pageTitle="Cart" isAdmin="${isAdmin}" showMenu="true" showSearch="false" >
 
     <div class="row w-25 justify-content-lg-center">
         <h2>Cart</h2>

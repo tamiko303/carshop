@@ -1,6 +1,6 @@
-package com.artocons.carshop.persistence.model;
+package com.artocons.carshop.persistence.request;
 
-import com.artocons.carshop.persistence.dtos.OrderItemDTO;
+import com.artocons.carshop.persistence.model.OrderItem;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
