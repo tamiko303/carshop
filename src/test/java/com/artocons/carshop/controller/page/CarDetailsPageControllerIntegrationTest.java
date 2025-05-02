@@ -62,7 +62,7 @@ public class CarDetailsPageControllerIntegrationTest {
 
         Car firstProduct = createTestCar(productId, "Toyota", "Test Model",  BigDecimal.valueOf(10000));
 
-        when(carService.getCarById(productId)).thenReturn(firstProduct);
+        when(carService.getCarByIdOrNull(productId)).thenReturn(firstProduct);
         when(cartService.getCartCount()).thenReturn(5);
         when(cartService.getCartTotalCost()).thenReturn(new BigDecimal("12345.67"));
 
@@ -76,19 +76,19 @@ public class CarDetailsPageControllerIntegrationTest {
                 .andExpect(model().attribute("cartCount", 5))
                 .andExpect(model().attribute("cartTotalCost", new BigDecimal("12345.67")));
 
-        verify(carService).getCarById(1L);
+        verify(carService).getCarByIdOrNull(1L);
         verify(cartService).getCartCount();
         verify(cartService).getCartTotalCost();
     }
 
     @Test
     public void testGetCarDetails_CarNotFound() throws Exception {
-        when(carService.getCarById(anyLong())).thenThrow(new NoSuchElementException("Car not found"));
+        when(carService.getCarByIdOrNull(anyLong())).thenThrow(new NoSuchElementException("Car not found"));
 
         mockMvc.perform(get("/product/999").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        verify(carService).getCarById(999L);
+        verify(carService).getCarByIdOrNull(999L);
     }
 
     @Test

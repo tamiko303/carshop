@@ -32,8 +32,16 @@ public class MappingUtils {
         return cartItemDto;
     }
 
-    public static OrderItemDTO convertToOrderItemDTO(OrderItem orderItem) {
-        OrderItemDTO dto = new OrderItemDTO(orderItem.getProduct().getId(), orderItem.getQuantity());
+    public static OrderItemDTO convertToOrderItemDTO(OrderItem orderItem, Car product) {
+        OrderItemDTO dto = new OrderItemDTO();
+
+        dto.setProductId(orderItem.getProduct());
+        dto.setQuantity(orderItem.getQuantity());
+        dto.setBrand(product.getBrand());
+        dto.setModel(product.getModel());
+        dto.setProductionYear(product.getProductionYear());
+        dto.setPrice(product.getPrice());
+        dto.setColors(product.getColors());
 
         return dto;
     }
@@ -64,6 +72,15 @@ public class MappingUtils {
         entity.setProduct(cartItemDTO.getProduct());
         entity.setQuantity(cartItemDTO.getQuantity());
         entity.setDescription(cartItemDTO.getDescription());
+
+        return entity;
+    }
+
+    public static OrderItem convertToOrderItemEntity(OrderItemDTO orderItemDTO, OrderHeader order) {
+        OrderItem entity = new OrderItem();
+        entity.setProduct(orderItemDTO.getProductId());
+        entity.setOrder(order.getOrderId());
+        entity.setQuantity(orderItemDTO.getQuantity());
 
         return entity;
     }

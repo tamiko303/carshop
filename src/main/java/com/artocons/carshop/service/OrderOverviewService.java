@@ -12,13 +12,7 @@ import javax.servlet.http.HttpSession;
 @RequiredArgsConstructor
 public class OrderOverviewService {
 
-    private final OrderRepository orderRepository;
     private final HttpSession session;
-
-    public OrderHeader getOrderByIdOrNull(Long orderId) {
-
-        return orderRepository.findById(orderId).orElse(null);
-    }
 
     public void setOrderDetailsAttribute(Model model, OrderHeader order) {
 

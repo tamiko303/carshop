@@ -37,7 +37,7 @@ OrderHeader {
     private String phone;
     private String description;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.ALL, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     @Override

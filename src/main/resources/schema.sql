@@ -56,6 +56,14 @@ create table order_header (
     primary key (order_id)
 );
 
+create table order_items (
+    id bigint not null AUTO_INCREMENT,
+    order_id bigint,
+    product_id bigint,
+    quantity int,
+    primary key (id)
+);
+
 create table users (
     user_id bigint not null AUTO_INCREMENT,
     username varchar(255) not null,

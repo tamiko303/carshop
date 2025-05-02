@@ -30,7 +30,7 @@ class StockServiceIntegrationTest {
     private Stock stock2;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         stockRepository.deleteAll();
 
         stock1 = new Stock();
