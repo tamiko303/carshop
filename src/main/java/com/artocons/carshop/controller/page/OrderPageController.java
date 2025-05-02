@@ -73,11 +73,7 @@ public class OrderPageController {
     public String goBack(HttpSession session) {
         String referer = (String) session.getAttribute("previousCartPage");
 
-        if (referer != null) {
-            return "redirect:" + referer;
-        } else {
-            return "redirect:/cart";
-        }
+        return referer != null ? "redirect:" + referer : "redirect:/cart";
     }
 
     @PostMapping("/placeOrder")

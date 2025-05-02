@@ -2,10 +2,12 @@ package com.artocons.carshop.service;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
+import com.artocons.carshop.persistence.dtos.OrderHeaderDTO;
 import com.artocons.carshop.persistence.enums.OrderStatus;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.persistence.repository.OrderRepository;
 import com.artocons.carshop.persistence.request.OrderRequest;
+import com.artocons.carshop.util.MappingUtils;
 import com.artocons.carshop.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,33 +66,15 @@ public class OrderService {
 
     @Transactional
     public OrderHeader placeOrder(OrderRequest orderData) throws ResourceNotFoundException, ResourceVaidationException {
-        OrderHeader order = new OrderHeader();
 
-        order.setOrderStatus(OrderStatus.PENDING);
-        order.setOrderDate(LocalDate.now());
-
-        ValidOrderItems validOrderItems = createOrderItems(order);
-        List<OrderItem> orderItems = validOrderItems.getValidItems();
-        order.setOrderItems(new HashSet<>(orderItems));
-
-        order.setFirstName(orderData.getFirstName());
-        order.setLastName(orderData.getLastName());
-        order.setAdress(orderData.getAdress());
-        order.setPhone(orderData.getPhone());
-        order.setDescription(orderData.getDescription());
-
-        order.setSubTotal(calculateSubTotalAmount(orderItems));
-        order.setDelivery(delivery);
-        order.setTotal(order.getSubTotal().add(order.getDelivery()));
+        OrderHeader order = prepareOrderData(orderData);
 
         OrderHeader saveOrder = orderRepository.save(order);
-        cartService.clearCart();
-        session.setAttribute("order", saveOrder);
 
-        String message = validOrderItems.getMessage();
-        session.setAttribute("orderMessage", message);
-
-//        OrderHeaderDTO saveOrderDTO = MappingUtils.convertToOrderHeaderDTO(saveOrder, message);
+        if (null != saveOrder.getOrderId()) {
+            cartService.clearCart();
+            session.setAttribute("order", saveOrder);
+        }
 
         return saveOrder;
     }
@@ -100,14 +84,17 @@ public class OrderService {
 
         ValidOrderItems validOrderItems = orderValidator.validate(itemsFromCart);
 
-        validOrderItems.getValidItems().forEach(orderItem -> {
-            orderItem.setOrder(order);
+        List<OrderItem> itemsToSave = validOrderItems.getValidItems();
+
+        itemsToSave.forEach(item -> {
+            item.setOrder(order);
             try {
-                stockService.reserveStock(orderItem.getProduct().getId(), orderItem.getQuantity());
+                stockService.reserveStock(item.getProduct().getId(), item.getQuantity());
             } catch (ResourceNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
+
         return validOrderItems;
     }
 
@@ -131,6 +118,30 @@ public class OrderService {
                 .map(item -> item.getProduct().getPrice()
                         .multiply(new BigDecimal(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private OrderHeader prepareOrderData(OrderRequest order) throws ResourceNotFoundException, ResourceVaidationException {
+
+        OrderHeader newOrder = new OrderHeader();
+
+        newOrder.setOrderStatus(OrderStatus.PENDING);
+        newOrder.setOrderDate(LocalDate.now());
+
+        ValidOrderItems validOrderItems = createOrderItems(newOrder);
+
+        newOrder.setOrderItems(new HashSet<>(validOrderItems.getValidItems()));
+
+        newOrder.setFirstName(order.getFirstName());
+        newOrder.setLastName(order.getLastName());
+        newOrder.setAdress(order.getAdress());
+        newOrder.setPhone(order.getPhone());
+        newOrder.setDescription(order.getDescription());
+
+        newOrder.setSubTotal(calculateSubTotalAmount(validOrderItems.getValidItems()));
+        newOrder.setDelivery(delivery);
+        newOrder.setTotal(newOrder.getSubTotal().add(newOrder.getDelivery()));
+
+        return newOrder;
     }
 
 }

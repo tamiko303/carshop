@@ -15,7 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderHeader {
+public class
+OrderHeader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

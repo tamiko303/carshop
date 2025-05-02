@@ -1,7 +1,6 @@
 package com.artocons.carshop.validation;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
-import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.persistence.model.ValidOrderItems;
 import com.artocons.carshop.persistence.model.Stock;
@@ -9,6 +8,7 @@ import com.artocons.carshop.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,47 +18,37 @@ import java.util.stream.Collectors;
 public class OrderValidator {
 
     private final StockService stockService;
+    private final HttpSession session;
 
-    public ValidOrderItems validate(List<OrderItem> items) throws ResourceNotFoundException, ResourceVaidationException {
-
+    public ValidOrderItems validate(List<OrderItem> items) {
         ValidOrderItems validOrderItems = new ValidOrderItems();
         List<Long> errorIds = new ArrayList<>();
         List<OrderItem> newItems = new ArrayList<>();
 
-        items.forEach(orderItem -> {
+        for (OrderItem orderItem : items) {
             try {
                 Stock stock = stockService.getStocksByCarId(orderItem.getProduct().getId());
+                Long availableStock = stock.getStock();
+                int orderQuantity = orderItem.getQuantity();
 
-                int orderItemQuantity = orderItem.getQuantity();
-
-                if (orderItemQuantity > stock.getStock()) {
+                if (orderQuantity > availableStock) {
                     errorIds.add(orderItem.getProduct().getId());
-                    orderItem.setQuantity(Math.toIntExact(stock.getStock()));
-                    newItems.add(orderItem);
-
-                } else {
-                    newItems.add(orderItem);
+                    int adjustedQuantity = (int) Math.max(availableStock, 0);
+                    orderItem.setQuantity(adjustedQuantity);
                 }
-
+                newItems.add(orderItem);
             } catch (ResourceNotFoundException e) {
                 errorIds.add(orderItem.getProduct().getId());
             }
-        });
-
-        boolean isNotEmpty = errorIds.stream().findAny().isPresent();
-
-        if (isNotEmpty) {
-            String message = errorIds.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(", "));
-
-            validOrderItems.setMessage(message);
-            validOrderItems.setValidItems(newItems);
-        } else {
-            validOrderItems.setMessage("");
-            validOrderItems.setValidItems(newItems);
         }
-    return validOrderItems;
 
+        validOrderItems.setValidItems(newItems);
+
+        if (!errorIds.isEmpty()) {
+            String errorIdsString = errorIds.stream().map(Object::toString).collect(Collectors.joining(","));
+            session.setAttribute("orderErrorIds", errorIdsString);
+        }
+
+        return validOrderItems;
     }
 }

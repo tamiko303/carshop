@@ -68,11 +68,4 @@ public class MappingUtils {
         return entity;
     }
 
-    public static OrderItem convertToOrderItemEntity(OrderItemDTO orderItemDTO) {
-        OrderItem entity = new OrderItem();
-//        entity.setProduct(orderItemDTO.getProductId());   //(orderItemDTO.getProductId());
-//        entity.setQuantity(orderItemDTO.getQuantity());
-
-        return entity;
-    }
 }
