@@ -23,14 +23,13 @@ public class Rating {
     private Long ratingId;
 
     @Column(name = "car_id")
-    @NotNull
     private Long productId;
 
     @Column(name = "rating_date")
-    @NotNull
     private LocalDate ratingDate;
 
 //    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "rating")
     private int rating;
 
     @Column(name = "username")

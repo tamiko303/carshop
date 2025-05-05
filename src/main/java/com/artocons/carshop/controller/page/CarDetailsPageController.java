@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -94,15 +95,14 @@ public class CarDetailsPageController {
         return CAR_COMMENTS_PAGE;
     }
 
-    @PostMapping("/{carId}/rating")
+    @PostMapping("/{carId}/addRating")
     public String addRating(@PathVariable Long carId, @ModelAttribute Rating ratingData) {
         try {
+            ratingData.setRatingDate(LocalDate.now());
             Rating savedOrder = ratingService.addRating(ratingData, carId);
             return String.format("redirect:/product/%d/comments", savedOrder.getProductId());
         } catch (NoSuchElementException e){
             return "redirect:/error";
         }
-
-
     }
 }
