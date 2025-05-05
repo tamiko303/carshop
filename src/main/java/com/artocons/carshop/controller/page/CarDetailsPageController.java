@@ -2,19 +2,20 @@ package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.persistence.model.Car;
+import com.artocons.carshop.persistence.model.Rating;
 import com.artocons.carshop.service.AuthService;
 import com.artocons.carshop.service.CarService;
 import com.artocons.carshop.service.CartService;
+import com.artocons.carshop.service.RatingService;
 import com.artocons.carshop.util.CarShopHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.artocons.carshop.util.CarShopConstants.PRODUCT_PATH;
@@ -30,6 +31,7 @@ public class CarDetailsPageController {
     private final CarService carService;
     private final CartService cartService;
     private final AuthService authService;
+    private final RatingService ratingService;
 
     @GetMapping( "/{carId}")
     public String getCarDetails(@PathVariable("carId") Long carId,
@@ -38,6 +40,8 @@ public class CarDetailsPageController {
 
         CarShopHelper.setHistoryReferer(request);
 
+//        List<Rating> rating2 = ratingService.getRatingByProductId(carId);
+
         try {
             Car carDetails = carService.getCarByIdOrNull(carId);
 
@@ -45,6 +49,10 @@ public class CarDetailsPageController {
 
             model.addAttribute("cartCount", cartService.getCartCount());
             model.addAttribute("cartTotalCost", cartService.getCartTotalCost());
+
+            model.addAttribute("ratingStar", ratingService.calculateRatingStar(carId));
+            model.addAttribute("averageRating", ratingService.calculateAverageRating(carId));
+            model.addAttribute("ratingCount", ratingService.getRatingCount(carId));
 
             model.addAttribute("isAdmin", authService.getIsAdmin());
 
@@ -60,4 +68,20 @@ public class CarDetailsPageController {
 
         return (referer != null) ? "redirect:" + referer : "redirect:/cars";
     }
+
+//    @PostMapping("/{id}/comment")
+//    public String addComment(@PathVariable Long id, @ModelAttribute Comment comment) {
+//        comment.setProduct(new Product(id)); // Установите продукт для комментария
+//        productService.addComment(comment);
+//
+//        return "redirect:/products/" + id;
+//    }
+
+//    @PostMapping("/{carId}/rating")
+//    public String addRating(@PathVariable Long carId, @ModelAttribute Rating rating) {
+////        rating.setProduct(new Product(carId));
+////        productService.addRating(rating);
+//
+//        return "redirect:/products/" + carId;
+//    }
 }

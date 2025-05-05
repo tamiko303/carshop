@@ -1,13 +1,17 @@
 package com.artocons.carshop.persistence.model;
 
-import com.artocons.carshop.persistence.enums.OrderStatus;
+import com.artocons.carshop.persistence.enums.RatingStar;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "car_rating")
 @NoArgsConstructor
@@ -18,7 +22,7 @@ public class Rating {
     @Column(name = "rating_id")
     private Long ratingId;
 
-    @Column(name = "product")
+    @Column(name = "car_id")
     @NotNull
     private Long productId;
 
@@ -26,13 +30,14 @@ public class Rating {
     @NotNull
     private LocalDate ratingDate;
 
-    @Enumerated(EnumType.STRING)
-    private Rating rating;
+//    @Enumerated(EnumType.ORDINAL)
+    private int rating;
 
-    @Column(name = "user_name")
+    @Column(name = "username")
     @NotNull
     private String userName;
 
     @Column(name = "comment")
     private String comment;
+
 }
