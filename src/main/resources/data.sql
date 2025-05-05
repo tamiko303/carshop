@@ -78,7 +78,7 @@ insert into roles (role_id, role_name) values (1, 'ROLE_ADMIN');
 
 insert into user_roles (user_id, role_id) values (1, 1);
 
-insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (1, 1, 2025-05-02, 4, 'Tamiko', '');
-insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (2, 1, 2025-04-08, 4, 'AAA-2', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.');
-insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (3, 2, 2025-05-02, 5, 'Barby', 'Pearl black');
-insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (4, 1, 2025-05-02, 1, 'Alex', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.');
+insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (1, 1, '2025-05-02', '4', 'Tamiko', '');
+insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (2, 1, '2025-04-08', '4', 'AAA-2', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.');
+insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (3, 2, '2025-05-02', '5', 'Barby', 'Pearl black');
+insert into car_rating (rating_id, car_id, rating_date, rating, username, comment) values (4, 1, '2025-05-02', '1', 'Alex', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.');
