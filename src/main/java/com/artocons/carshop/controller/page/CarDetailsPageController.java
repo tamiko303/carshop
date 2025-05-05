@@ -26,7 +26,9 @@ import static com.artocons.carshop.util.CarShopConstants.PRODUCT_PATH;
 public class CarDetailsPageController {
 
     private static final String CAR_DETAILS_PAGE = "carDetailsPage";
+    private static final String CAR_COMMENTS_PAGE = "carCommentsPage";
     private static final String CAR_ITEM = "carItem";
+    private static final String RATING_ITEM = "ratingDetailItem";
 
     private final CarService carService;
     private final CartService cartService;
@@ -39,8 +41,6 @@ public class CarDetailsPageController {
                                 Model model) throws ResourceNotFoundException {
 
         CarShopHelper.setHistoryReferer(request);
-
-//        List<Rating> rating2 = ratingService.getRatingByProductId(carId);
 
         try {
             Car carDetails = carService.getCarByIdOrNull(carId);
@@ -69,19 +69,40 @@ public class CarDetailsPageController {
         return (referer != null) ? "redirect:" + referer : "redirect:/cars";
     }
 
-//    @PostMapping("/{id}/comment")
-//    public String addComment(@PathVariable Long id, @ModelAttribute Comment comment) {
-//        comment.setProduct(new Product(id)); // Установите продукт для комментария
-//        productService.addComment(comment);
-//
-//        return "redirect:/products/" + id;
-//    }
+    @GetMapping("/{carId}/comments")
+    public String getComments(@PathVariable("carId") Long carId,HttpServletRequest request,
+                              Model model) throws ResourceNotFoundException {
+        CarShopHelper.setHistoryReferer(request);
 
-//    @PostMapping("/{carId}/rating")
-//    public String addRating(@PathVariable Long carId, @ModelAttribute Rating rating) {
-////        rating.setProduct(new Product(carId));
-////        productService.addRating(rating);
-//
-//        return "redirect:/products/" + carId;
-//    }
+        try {
+            Car carDetails = carService.getCarByIdOrNull(carId);
+
+            List<Rating> ratingItems = ratingService.getRatingByProductId(carId);
+
+            model.addAttribute(CAR_ITEM, carDetails);
+            model.addAttribute(RATING_ITEM, ratingItems);
+
+            model.addAttribute("ratingStar", ratingService.calculateRatingStar(carId));
+            model.addAttribute("averageRating", ratingService.calculateAverageRating(carId));
+            model.addAttribute("ratingCount", ratingService.getRatingCount(carId));
+
+            model.addAttribute("isAdmin", authService.getIsAdmin());
+
+        } catch (NoSuchElementException e){
+            throw new ResourceNotFoundException(e.getMessage());
+        }
+        return CAR_COMMENTS_PAGE;
+    }
+
+    @PostMapping("/{carId}/rating")
+    public String addRating(@PathVariable Long carId, @ModelAttribute Rating ratingData) {
+        try {
+            Rating savedOrder = ratingService.addRating(ratingData, carId);
+            return String.format("redirect:/product/%d/comments", savedOrder.getProductId());
+        } catch (NoSuchElementException e){
+            return "redirect:/error";
+        }
+
+
+    }
 }

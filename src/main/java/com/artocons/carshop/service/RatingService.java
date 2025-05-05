@@ -5,7 +5,9 @@ import com.artocons.carshop.persistence.repository.RatingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -13,6 +15,19 @@ import java.util.List;
 public class RatingService {
 
     private final RatingRepository ratingRepository;
+
+    @Transactional
+    public Rating addRating(Rating ratingData, Long productId)  {
+
+        Rating newComment = new Rating();
+        newComment.setProductId(productId);
+        newComment.setRatingDate(LocalDate.now());
+        newComment.setRating(ratingData.getRating());
+        newComment.setComment(ratingData.getComment());
+        newComment.setUserName(ratingData.getUserName());
+
+        return ratingRepository.save(newComment);
+    }
 
     public String calculateRatingStar(long productId) {
 
@@ -56,10 +71,7 @@ public class RatingService {
         return ratingList.size();
     }
 
-
-
-
-    private List<Rating> getRatingByProductId(long productId) {
+    public List<Rating> getRatingByProductId(long productId) {
 
         return ratingRepository.findByProductId(productId);
     }
