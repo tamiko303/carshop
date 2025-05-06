@@ -2,6 +2,7 @@ package com.artocons.carshop.controller.page;
 
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
+import com.artocons.carshop.persistence.dtos.OrderItemDTO;
 import com.artocons.carshop.persistence.model.OrderHeader;
 import com.artocons.carshop.persistence.model.OrderItem;
 import com.artocons.carshop.persistence.request.OrderRequest;
@@ -50,7 +51,7 @@ public class OrderPageController {
 
         CarShopHelper.setHistoryReferer(request);
 
-        Page<OrderItem> order = orderService.showOrderPage(Pageable.unpaged());
+        Page<OrderItemDTO> order = orderService.showOrderPage(Pageable.unpaged());
 
         BigDecimal subTotalCost = cartService.getCartTotalCost();   //userId
         BigDecimal totalCost = subTotalCost.add(delivery);

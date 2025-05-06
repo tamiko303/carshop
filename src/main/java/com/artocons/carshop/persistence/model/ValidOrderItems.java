@@ -1,5 +1,6 @@
 package com.artocons.carshop.persistence.model;
 
+import com.artocons.carshop.persistence.dtos.OrderItemDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class ValidOrderItems {
     private String message;
-    private List<OrderItem> validItems = new ArrayList<>();
+    private List<OrderItemDTO> validItems = new ArrayList<>();
 }

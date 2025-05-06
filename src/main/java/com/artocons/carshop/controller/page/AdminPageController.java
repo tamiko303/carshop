@@ -72,7 +72,7 @@ public class AdminPageController {
 
         CarShopHelper.setHistoryReferer(request);
 
-        OrderHeader order = orderOverviewService.getOrderByIdOrNull(orderId);
+        OrderHeader order = orderService.getOrderByIdOrNull(orderId);
 
         model.addAttribute(ORDER, order.getOrderItems());
         model.addAttribute(ORDER_ID, orderId);

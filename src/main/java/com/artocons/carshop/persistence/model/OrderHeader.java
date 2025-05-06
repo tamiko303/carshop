@@ -15,7 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderHeader {
+public class
+OrderHeader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +37,7 @@ public class OrderHeader {
     private String phone;
     private String description;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.ALL, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     @Override

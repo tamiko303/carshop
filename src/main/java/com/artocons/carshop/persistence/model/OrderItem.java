@@ -19,21 +19,19 @@ public class OrderItem {
     @Column(name = "quantity")
     private int quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private OrderHeader order;
+    @Column(name = "order_id")
+    private Long order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Car product;
+    @Column(name = "product_id")
+    private Long product;
 
-    public OrderItem(Car product, int quantity) {
+    public OrderItem(Long product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
 
     @Override
     public String toString() {
-        return this.getProduct().getBrand() + " " + this.getProduct().getModel() + " " + this.getQuantity();
+        return this.getProduct() + " " + this.getQuantity();
     }
 }

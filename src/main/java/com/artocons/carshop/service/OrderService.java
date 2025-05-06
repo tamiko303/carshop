@@ -3,6 +3,7 @@ package com.artocons.carshop.service;
 import com.artocons.carshop.exception.ResourceNotFoundException;
 import com.artocons.carshop.exception.ResourceVaidationException;
 import com.artocons.carshop.persistence.dtos.OrderHeaderDTO;
+import com.artocons.carshop.persistence.dtos.OrderItemDTO;
 import com.artocons.carshop.persistence.enums.OrderStatus;
 import com.artocons.carshop.persistence.model.*;
 import com.artocons.carshop.persistence.repository.OrderRepository;
@@ -10,20 +11,20 @@ import com.artocons.carshop.persistence.request.OrderRequest;
 import com.artocons.carshop.util.MappingUtils;
 import com.artocons.carshop.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +42,29 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderValidator orderValidator;
 
-    public PageImpl<OrderItem> showOrderPage(Pageable pageable ) {
-        List<OrderItem> orderItems = formOrderItemsFromCart();
+    public PageImpl<OrderItemDTO> showOrderPage(Pageable pageable ) {
+        List<OrderItem> items = formOrderItemsFromCart();
+
+        List<OrderItemDTO> orderItems = new ArrayList<>();
+        items.forEach(item -> {
+            Car product = carService.getCarByIdOrNull(item.getProduct());
+            if (product != null) {
+                orderItems.add(MappingUtils.convertToOrderItemDTO(item, product));
+            }
+        });
+
         return new PageImpl<>(orderItems, pageable, orderItems.size());
     }
 
     public Page<OrderHeader> getAllOrders(Pageable pageable ) {
         return orderRepository.findAll(pageable);
+    }
+
+    public OrderHeader getOrderByIdOrNull(Long orderId) {
+        OrderHeader order = orderRepository.findById(orderId).orElse(null);
+        assert order != null;
+        Hibernate.initialize(order.getOrderItems());
+        return order;
     }
 
     @Transactional
@@ -79,17 +96,17 @@ public class OrderService {
         return saveOrder;
     }
 
-    private ValidOrderItems createOrderItems(OrderHeader order) throws ResourceNotFoundException, ResourceVaidationException {
+    ValidOrderItems createOrderItems(OrderHeader order) throws ResourceNotFoundException, ResourceVaidationException {
         List<OrderItem> itemsFromCart = formOrderItemsFromCart();
 
         ValidOrderItems validOrderItems = orderValidator.validate(itemsFromCart);
 
-        List<OrderItem> itemsToSave = validOrderItems.getValidItems();
+        List<OrderItemDTO> itemsToSave = validOrderItems.getValidItems();
 
         itemsToSave.forEach(item -> {
-            item.setOrder(order);
+//            item.setOrder(order.getOrderId());
             try {
-                stockService.reserveStock(item.getProduct().getId(), item.getQuantity());
+                stockService.reserveStock(item.getProductId(), item.getQuantity());
             } catch (ResourceNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -98,38 +115,50 @@ public class OrderService {
         return validOrderItems;
     }
 
-    private List<OrderItem> formOrderItemsFromCart() {
+    List<OrderItem> formOrderItemsFromCart() {
         List<Cart> cart = cartService.getCartList();
 
         List<OrderItem> orderItems = new ArrayList<>();
         cart.forEach(cartItem -> {
             Car product = carService.getCarByIdOrNull(cartItem.getProduct());
             if(product != null) {
-                orderItems.add(new OrderItem( product, cartItem.getQuantity()));
+                orderItems.add(new OrderItem( product.getId(), cartItem.getQuantity()));
             }
         });
 
        return orderItems;
     }
 
-    private BigDecimal calculateSubTotalAmount(List<OrderItem> orderItemList) {
+    BigDecimal calculateSubTotalAmount(List<OrderItem> orderItemList) {
         return  orderItemList
                 .stream()
-                .map(item -> item.getProduct().getPrice()
-                        .multiply(new BigDecimal(item.getQuantity())))
+                .map(item -> {
+                    try {
+                        return carService.getPriceById(item.getProduct())
+                                .multiply(new BigDecimal(item.getQuantity()));
+                    } catch (ResourceNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private OrderHeader prepareOrderData(OrderRequest order) throws ResourceNotFoundException, ResourceVaidationException {
 
         OrderHeader newOrder = new OrderHeader();
+        Set<OrderItem> orderItems = new HashSet<>();
 
         newOrder.setOrderStatus(OrderStatus.PENDING);
         newOrder.setOrderDate(LocalDate.now());
 
         ValidOrderItems validOrderItems = createOrderItems(newOrder);
 
-        newOrder.setOrderItems(new HashSet<>(validOrderItems.getValidItems()));
+        List<OrderItemDTO> itemsDto = validOrderItems.getValidItems();
+        itemsDto.forEach(item -> {
+            orderItems.add(MappingUtils.convertToOrderItemEntity(item, newOrder));
+        });
+
+        newOrder.setOrderItems(orderItems);
 
         newOrder.setFirstName(order.getFirstName());
         newOrder.setLastName(order.getLastName());
@@ -137,7 +166,9 @@ public class OrderService {
         newOrder.setPhone(order.getPhone());
         newOrder.setDescription(order.getDescription());
 
-        newOrder.setSubTotal(calculateSubTotalAmount(validOrderItems.getValidItems()));
+        List<OrderItem> items = new ArrayList<>(orderItems);
+
+        newOrder.setSubTotal(calculateSubTotalAmount(items));
         newOrder.setDelivery(delivery);
         newOrder.setTotal(newOrder.getSubTotal().add(newOrder.getDelivery()));
 

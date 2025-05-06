@@ -47,9 +47,12 @@ public class CartPageController {
     @PostMapping("/{productId}/remove")
     public String removeProductFromCart(@PathVariable(value = "productId") long productId) throws ResourceNotFoundException {
 
-        cartService.removeProductFromCart(productId);
-
-        return "redirect:/cart";
+        try {
+            cartService.removeProductFromCart(productId);
+            return "redirect:/cart";
+        } catch (ResourceNotFoundException e) {
+            return "error";
+        }
     }
 
 }
