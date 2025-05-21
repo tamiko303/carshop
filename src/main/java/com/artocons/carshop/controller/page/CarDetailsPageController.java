@@ -39,7 +39,7 @@ public class CarDetailsPageController {
         CarShopHelper.setHistoryReferer(request);
 
         try {
-            Car carDetails = carService.getCarById(carId);
+            Car carDetails = carService.getCarByIdOrNull(carId);
 
             model.addAttribute(CAR_ITEM, carDetails);
 

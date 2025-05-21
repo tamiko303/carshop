@@ -137,6 +137,7 @@
                     enableAddButton(true);
                 }
             });
+            setTimeout(function() {window.location.reload();}, 1000);
         }
 
     </script>

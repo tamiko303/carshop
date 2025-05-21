@@ -53,18 +53,12 @@ public class CarService{
     }
 
     public BigDecimal getPriceById(long productId) throws ResourceNotFoundException {
-        Car carItem = carRepository.findById(productId)
-                                    .orElseThrow(() -> new ResourceNotFoundException("Product not found for id :: " + productId));
+        Car carItem = carRepository.findById(productId).orElse(null);
 
         AtomicReference<BigDecimal> price = new AtomicReference<>(BigDecimal.ZERO);
-        price.set(carItem.getPrice());
+        if (carItem != null) { price.set(carItem.getPrice()); }
 
         return price.get();
-    }
-
-    public Car getCarById(long productId) throws ResourceNotFoundException {
-        return carRepository.findById(productId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Product not found for id :: " + productId));
     }
 
     public Car getCarByIdOrNull(long productId) {

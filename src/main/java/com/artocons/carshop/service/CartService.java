@@ -19,7 +19,6 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -124,28 +123,14 @@ public class CartService {
         return totalCost;
     }
 
-//    private void addProductInfo(List<CartItemDTO> list) throws ResourceNotFoundException {
-//
-//        list.forEach(cartItemDto -> {
-//            try {
-//                Car product = carService.getCarById(cartItemDto.getProduct());
-//
-//                cartItemDto = MappingUtils.convertToCartItemDTO(product, cartItemDto);
-//
-//                } catch (ResourceNotFoundException e) {
-//                    throw new RuntimeException(e.getMessage());
-//                }
-//            }
-//        );
-//    }
-
-    public void removeProductFromCart(Long product) throws ResourceNotFoundException {
+    public void removeProductFromCart(Long productId) throws ResourceNotFoundException {
 
         CarShopHelper helper = new CarShopHelper(session);
-        Optional<Cart> targetElement = helper.getCartItemByProductId(product);
+        Optional<Cart> targetElement = helper.getCartItemByProductId(productId);
 
         List<Cart> cart = (List<Cart>) session.getAttribute("cart");
         targetElement.ifPresent(i -> cart.remove(i));
+
     }
 
     public void clearCart(){
