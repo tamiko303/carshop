@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Setter
 @Getter
-@ToString
 @Table(name = "order_items")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,5 +30,10 @@ public class OrderItem {
     public OrderItem(Car product, int quantity) {
         this.product = product;
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return this.getProduct().getBrand() + " " + this.getProduct().getModel() + " " + this.getQuantity();
     }
 }

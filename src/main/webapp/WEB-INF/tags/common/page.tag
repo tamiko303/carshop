@@ -1,9 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ attribute name="pageTitle" required="true" type="java.lang.String" %>
-<%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
 <%@ attribute name="showSearch" required="true" type="java.lang.Boolean" %>
-<%@ attribute name="showCart" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="showMenu" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="isAdmin" required="true" type="java.lang.Boolean" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="<c:url value="/css/carshop.css"/>"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
@@ -50,6 +51,28 @@
 
         $(document).ready(function() {
             debugger;
+            $( "#delivered .btn-sm" ).click( function( event ) {
+                enableAddButton(false);
+                event.preventDefault();
+
+                let $order = $(this).closest('form').data('id');
+                setStatus($order ,$.param({ status: 'DELIVERED' }) )
+            });
+        });
+
+        $(document).ready(function() {
+            debugger;
+            $( "#rejected .btn-sm" ).click( function( event ) {
+                enableAddButton(false);
+                event.preventDefault();
+
+                let $order = $(this).closest('form').data('id');
+                setStatus($order ,$.param({ status: 'REJECTED' }) )
+            });
+        });
+
+        $(document).ready(function() {
+            // debugger;
             $( "#btn-user_data" ).click( function( event ) {
                 let $forms = $(this).closest('form.needs-validation');
 
@@ -95,9 +118,25 @@
             });
         }
 
-        function validateOrderData() {
-            debugger;
-            let $form = $(this).closest('order');
+        function setStatus(order, form) {
+            $.ajax({
+                type : "POST",
+                url : "${home}" + "/admin/orders/"  + order + "/setStatus",
+                data: form,
+                success : function(response) {
+                    $('#status').text(response.data.status);
+                },
+                error : function(e) {
+                    if (e.responseJSON.code == "422") {
+                        $('#error').text(e.responseJSON.msg);
+                    }
+
+                },
+                done : function() {
+                    console.log("DONE");
+                    enableAddButton(true);
+                }
+            });
         }
 
     </script>
@@ -112,12 +151,14 @@
                 <h1>Car Shop Application</h1>
             </div>
         </header>
-        <c:if test="${showMenu}">
-            <common:menu/>
-        </c:if>
-        <c:if test="${showCart}">
-            <common:myCart/>
-        </c:if>
+        <c:choose>
+            <c:when test="${isOrders}">
+                <common:adminMenu isAdmin="${isAdmin}"/>
+            </c:when>
+            <c:when test="${showMenu}">
+                <common:menu isAdmin="${isAdmin}"/>
+            </c:when>
+        </c:choose>
         <c:if test="${showSearch}">
             <common:search currentPage="${currentPage}" sortField="${sortField}" sortDir="${sortDir}"/>
         </c:if>
